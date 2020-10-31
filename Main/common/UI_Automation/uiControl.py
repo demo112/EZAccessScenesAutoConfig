@@ -1,17 +1,13 @@
 # 该文件主要放置基本操作，如：点击切换页面，为某文本框赋值，删除某条记录等
-import sys
-import os
+import datetime
+
+from Main.common.UI_Automation.controlOperation import *
 
 import uiautomation
-
-from .__init__ import EXPORTPATH
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-import datetime
-
-from .controlOperation import *
 
 
 class ControlClint:
@@ -171,6 +167,24 @@ class ControlClint:
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
 
+
+    def openDepartmentTree(self, targetId="", opentype=False):
+        """
+        人员与部门平级，按顺序编号
+        :param targetId: 目标的组织树ID
+        :param opentype: 是否展开
+        :return:
+        """
+        if not targetId:
+            targetId = "treeDemo_1_span"
+        try:
+            flag = uiautomation.CustomControl(AutomationId=targetId).GetParentControl()
+            flag.Click()
+            if opentype:
+                pos = autoit.mouse_get_pos()
+                autoit.mouse_click(button="left", x=pos[0] - 45, y=pos[1], clicks=1, speed=100)
+        except Exception as e:
+            log.debug("Can not control EZAccess, because: %s" % e)
 
 class DeviceManagement:
     """
@@ -505,8 +519,9 @@ class PersonManagement:
 
     def __init__(self):
         pass
+        self.demo = 111
 
-    def tab_person(self, Name="人员管理", Depth=12, foundIndex=3):
+    def tab_person(self, AutomationId="LinkPersonManagement"):
         """
         选择人员管理页签
         :param Name: 标签元素名称
@@ -516,7 +531,64 @@ class PersonManagement:
         """
         try:
             # flag = uiautomation.HyperlinkControl(Name=Name, Depth=Depth, fondIndex=foundIndex)  已失效，弃用
-            flag = uiautomation.CustomControl(AutomationId="LinkPersonManagement")
+            flag = uiautomation.CustomControl(AutomationId=AutomationId)
+            flag.Click()
+        except Exception as e:
+            log.debug("Can not control EZAccess, because: %s" % e)
+
+    def chooseDepartment(self, targetId=""):
+        cc = ControlClint()
+        cc.openDepartmentTree(targetId=targetId)
+
+    def batchImport(self, name="批量导入", Depth=12, foundIndex=4):
+        """
+        打开批量导入窗口
+        :param targetId:
+        :return:
+        """
+        co = ControlOperation()
+        try:
+            flag = uiautomation.ButtonControl(name=name, Depth=Depth, foundIndex=foundIndex)
+            flag.Click()
+        except Exception as e:
+            log.debug("Can not control EZAccess, because: %s" % e)
+
+    def batchImportChoose(self, fileName=None, name="人员名单.xls", Depth=17, foundIndex=1):
+        """
+        打开批量导入窗口
+        :param targetId:
+        :return:
+        """
+        co = ControlOperation()
+        try:
+            flag = uiautomation.EditControl(name=name, Depth=Depth, foundIndex=foundIndex)
+            flag.Click()
+            file = uiautomation.EditControl(AutomationId="1148")
+            # a = "C:\\Users\\user\\PycharmProjects\\Tools\\EZAccessScenesAutoConfig\\Data\\Person\\Info\\cn002.xls"
+            co.give_value(file, fileName)
+        except Exception as e:
+            log.debug("Can not control EZAccess, because: %s" % e)
+
+    def batchInportClose(self, name="批量导入", Depth=15, foundIndex=1):
+        """
+        关闭批量导入窗口
+        :param targetId:
+        :return:
+        """
+        try:
+            flag = uiautomation.ButtonControl(name=name, Depth=Depth, foundIndex=foundIndex)
+            flag.Click()
+        except Exception as e:
+            log.debug("Can not control EZAccess, because: %s" % e)
+
+    def batchInportConfirm(self, AutomationId="btn_confirm"):
+        """
+        确认批量导入
+        :param targetId:
+        :return:
+        """
+        try:
+            flag = uiautomation.ButtonControl(AutomationId=AutomationId)
             flag.Click()
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
@@ -734,56 +806,14 @@ class Attendance:
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
 
-    def OLD_openDepartmentOrPerson(self, departmentId="", personID=""):
-        #     """
-        #     界面策略更改，人员与部门平级，按顺序编号
-        #     定位并展开对应目标
-        #     :param departmentId: 部门编号，根部门为4096，已创建顺序类推，具体应到数据库中查询
-        #     :param personID: 人员Id，从2开始，以此类推,目前建议操作15以内人员
-        #     :return:
-        #     """
-        #     # todo 后续增加滚动滚动条方法以适配更多人员选项
-        #     # todo 后续增加部门展开状态
-        #     if departmentId:
-        #         targetId = departmentId
-        #     else:
-        #         targetId = "treeDemo_1_a"
-        #
-        #     # if personID:
-        #     #     targetId += "-" + personID
-        #     # else:
-        #     #     pass
-        #
-        #     try:
-        #         flag = uiautomation.CustomControl(AutomationId=targetId).GetParentControl()
-        #         flag.Click()
-        #         # 以下用于人员选中，新版本不需要
-        #         # if targetId > "treeDemo_1_a":
-        #         #     flag = uiautomation.CustomControl(AutomationId=targetId).GetParentControl().GetFirstChildControl()
-        #         # if not personID:
-        #         #     flag.Click()
-        #     except Exception as e:
-        #         log.info("Can not control EZAccess, because: %s" % e)
-        pass
-
     def openDepartmentOrPerson(self, targetId="", opentype=False):
         """
         人员与部门平级，按顺序编号
         :param targetId:
         :return:
         """
-        # todo 后续增加滚动滚动条方法以适配更多人员选项
-        # todo 后续增加部门展开状态
-        if not targetId:
-            targetId = "treeDemo_1_span"
-        try:
-            flag = uiautomation.CustomControl(AutomationId=targetId).GetParentControl()
-            flag.Click()
-            if opentype:
-                pos = autoit.mouse_get_pos()
-                autoit.mouse_click(button="left", x=pos[0] - 45, y=pos[1], clicks=1, speed=100)
-        except Exception as e:
-            log.debug("Can not control EZAccess, because: %s" % e)
+        cc = ControlClint()
+        cc.openDepartmentTree(targetId="treeDemo_1_span")
 
     # todo 待修改
     def attendanceRegulations(self, Name="考勤制度", Depth=23, foundIndex=6):

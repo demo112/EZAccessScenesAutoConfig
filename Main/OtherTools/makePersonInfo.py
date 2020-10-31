@@ -86,7 +86,7 @@ class PersonList():
             # print(all_person)
             dp = formatNum(dp)
             dp_person = all_person["dp:" + dp]
-            file = COPYFILEPATH + "\\" + language + dp + ".xls"
+            file = PHOTOCOPYPATH + "\\" + language + dp + ".xls"
 
             f = xlwt.Workbook()
             sheet1 = f.add_sheet(u'sheet1', cell_overwrite_ok=True)  # 创建sheet
@@ -117,7 +117,7 @@ class MakePhoto:
             for person in range(1, maxNumEachDp + 1):
                 person = formatNum(person)
                 for index in range(1, PhotoNum + 1):
-                    name = copyFilePath + "/" + PersonID % (dp, person) + "_" + str(index) + ".jpg"
+                    name = copyFilePath + "\\" + PersonID % (dp, person) + "_" + str(index) + ".jpg"
                     with open(name, mode="wb") as target:
                         target.write(pic)
 
@@ -138,13 +138,13 @@ class MakePhoto:
         for z in range(1, zipFileNum + 1):
             # 拆分列表分别写入
             _list = fileList[eachZipNum * (z - 1):eachZipNum * (z)]
-            file = copyFilePath + "/" + "PhotoZip%d.zip" % z
+            file = copyFilePath + "\\" + "PhotoZip%d.zip" % z
             with ZipFile(file, "w") as zf:
                 for pic in _list:
-                    _filePath = copyFilePath + "/" + pic
+                    _filePath = copyFilePath + "\\" + pic
                     zf.write(_filePath, arcname=pic, compress_type=None, compresslevel=None)
             for pic in _list:
-                _filePath = copyFilePath + "/" + pic
+                _filePath = copyFilePath + "\\" + pic
                 os.remove(_filePath)
             time.sleep(1)
 
@@ -157,8 +157,8 @@ def makePersonList():
 
 def makePhotoZip():
     clon = MakePhoto()
-    motherFilePath = MOTHERFILEPATH + "/" + os.listdir(MOTHERFILEPATH)[0]
-    copyFilePath = COPYFILEPATH
+    motherFilePath = MOTHERFILEPATH + "\\" + os.listdir(MOTHERFILEPATH)[0]
+    copyFilePath = PHOTOCOPYPATH
     clon.makePhoto(motherFilePath, copyFilePath)
     clon.zipPhoto(motherFilePath, copyFilePath)
 
@@ -170,10 +170,10 @@ if __name__ == '__main__':
     # pl.writePersonList(all_person)
     #
     # clon = MakePhoto()
-    # motherFilePath = MOTHERFILEPATH + "/" + os.listdir(MOTHERFILEPATH)[0]
-    # copyFilePath = COPYFILEPATH
+    # motherFilePath = MOTHERFILEPATH + "\\" + os.listdir(MOTHERFILEPATH)[0]
+    # copyFilePath = PHOTOCOPYPATH
     # clon.makePhoto(motherFilePath, copyFilePath)
     # clon.zipPhoto(motherFilePath, copyFilePath)
-    # makePersonList()
-    makePhotoZip()
+    makePersonList()
+    # makePhotoZip()
     pass

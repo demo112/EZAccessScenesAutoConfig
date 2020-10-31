@@ -1,15 +1,14 @@
 # 该文件主要放置基础操作方法：如点击、赋值、编辑、选择等
+from Main.common.UI_Automation.__init__ import *
 
 import sys
-import os
 import time
-
 import autoit
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
-from Main.OtherTools.Log.CreateLog import *
+
 
 class ControlOperation:
     """
@@ -41,7 +40,7 @@ class ControlOperation:
             # pynput.keyboard.Controller().type(value + "\n")
             autoit.send("^a" + "{DELETE}")
             autoit.send(value + "{LSHIFT}" + "{ENTER}")
-            time.sleep(.6)
+            time.sleep(0.6)
         except Exception as e:
             log.warning("【%s】赋值【%s】失败，请处理！" % (target.Name, value))
             log.warning("原因：", e)
@@ -62,6 +61,11 @@ class ControlOperation:
             log.warning("【%s】内容删除失败，请处理！" % (target.Name))
             log.warning("原因：", e)
         return target
+
+
+class SqlIO:
+    def __init__(self):
+        pass
 
 
 if __name__ == '__main__':

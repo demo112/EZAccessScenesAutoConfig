@@ -1,1 +1,2 @@
-EXPORTPATH = "C:/Users/user/PycharmProjects/Tools/EZAccessScenesAutoConfig/Data/Person/ExportFile"
+from Main.__init__ import *
+
