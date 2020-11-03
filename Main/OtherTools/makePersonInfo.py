@@ -86,7 +86,7 @@ class PersonList():
             # print(all_person)
             dp = formatNum(dp)
             dp_person = all_person["dp:" + dp]
-            file = PHOTOCOPYPATH + "\\" + language + dp + ".xls"
+            file = PERSONINFO + "\\" + language + dp + ".xls"
 
             f = xlwt.Workbook()
             sheet1 = f.add_sheet(u'sheet1', cell_overwrite_ok=True)  # 创建sheet
@@ -108,6 +108,10 @@ class MakePhoto:
         pass
 
     def makePhoto(self, motherFilePath, copyFilePath):
+        fileList = os.listdir(copyFilePath)
+        for file in fileList:
+            _filePath = copyFilePath + "\\" + file
+            os.remove(_filePath)
         with open(motherFilePath, mode="rb") as reader:
             pic = reader.read()
         # 按部门轮巡
@@ -128,7 +132,7 @@ class MakePhoto:
             if ".zip" in file:
                 fileList.remove(file)
         # 计算每个文件中允许照片数量及压缩包数量
-        motherFileSize = os.path.getsize(motherFilePath) / 1024
+        motherFileSize = round(os.path.getsize(motherFilePath) / 1024, 2) + 0.2
         eachZipNum = int(zipFileSize * 1024 / motherFileSize)
         zipFileNum = int(len(fileList) / eachZipNum) + 1
         print(motherFileSize)
@@ -174,6 +178,6 @@ if __name__ == '__main__':
     # copyFilePath = PHOTOCOPYPATH
     # clon.makePhoto(motherFilePath, copyFilePath)
     # clon.zipPhoto(motherFilePath, copyFilePath)
-    makePersonList()
-    # makePhotoZip()
+    # makePersonList()
+    makePhotoZip()
     pass

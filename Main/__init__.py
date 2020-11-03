@@ -6,8 +6,16 @@ log = CreateLog().get_logger()
 HOMEPATH = os.path.abspath(os.path.join(os.path.abspath(__file__), "..\\.."))
 
 CONFIGPATH = HOMEPATH + "\\Scenes"
+
 PERSONINFO = HOMEPATH + "\\Data\\Person\\Info"
+PHOTOCOPYPATH = HOMEPATH + "\\Data\\Person\\Photo\\clonfile"
+MOTHERFILEPATH = HOMEPATH + "\\Data\\Person\\Photo\\motherfile"
+
+
+
 EXPORTPATH = HOMEPATH + "\\Data\\Person\\ExportFile"
+
+
 
 PERSONDEPARTMENTLIST = [
     # todo 暂时只支持初始化创建，需增加自适应部门AutomationID功能

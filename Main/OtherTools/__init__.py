@@ -1,9 +1,5 @@
 from xml.etree import ElementTree  as  ET
 from Main.__init__ import *
-# PHOTOCOPYPATH = HOMEPATH + "/Data/Person/Photo/clonfile"
-# MOTHERFILEPATH = HOMEPATH + "/Data/Person/Photo/motherfile"
-PHOTOCOPYPATH = "C:/Users/user/PycharmProjects/Tools/EZAccessScenesAutoConfig/Data/Person/Photo/clonfile"
-MOTHERFILEPATH = "C:/Users/user/PycharmProjects/Tools/EZAccessScenesAutoConfig/Data/Person/Photo/motherfile"
 
 title_en = ["Person ID(*)", "Name(*)", "Gender(*)", "ID No.", "IC Card No.", "Date of Birth", "Phone", "Address"]
 title_cn = ["人员编号(*)", "姓名(*)", "性别(*)", "证件号码", "IC卡号", "出生年月", "手机号码", "地址"]

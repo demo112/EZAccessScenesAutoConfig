@@ -167,7 +167,6 @@ class ControlClint:
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
 
-
     def openDepartmentTree(self, targetId="", opentype=False):
         """
         人员与部门平级，按顺序编号
@@ -185,6 +184,7 @@ class ControlClint:
                 autoit.mouse_click(button="left", x=pos[0] - 45, y=pos[1], clicks=1, speed=100)
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
+
 
 class DeviceManagement:
     """
@@ -538,38 +538,45 @@ class PersonManagement:
 
     def chooseDepartment(self, targetId=""):
         cc = ControlClint()
-        cc.openDepartmentTree(targetId=targetId)
+        try:
+            cc.openDepartmentTree(targetId=targetId)
+            return True
+        except:
+            return False
 
-    def batchImport(self, name="批量导入", Depth=12, foundIndex=4):
+    def batchImport(self, name="", Depth=None, foundIndex=None):
         """
         打开批量导入窗口
         :param targetId:
         :return:
         """
-        co = ControlOperation()
         try:
             flag = uiautomation.ButtonControl(name=name, Depth=Depth, foundIndex=foundIndex)
             flag.Click()
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
 
-    def batchImportChoose(self, fileName=None, name="人员名单.xls", Depth=17, foundIndex=1):
+    def batchImportChoose(self, fileName=None, name="", Depth=None, foundIndex=None, winChooseID=""):
         """
-        打开批量导入窗口
-        :param targetId:
+        触发批量导入
+        :param fileName: 需要导入的文件名称
+        :param name: 导入窗口的路径选择空间名称
+        :param Depth: 导入窗口的路径选择空间深度
+        :param foundIndex: 导入窗口的路径选择空间序列
+        :param winChooseID: 系统自带路径输入框的AutomationID
         :return:
         """
         co = ControlOperation()
         try:
             flag = uiautomation.EditControl(name=name, Depth=Depth, foundIndex=foundIndex)
             flag.Click()
-            file = uiautomation.EditControl(AutomationId="1148")
+            file = uiautomation.EditControl(AutomationId=winChooseID)
             # a = "C:\\Users\\user\\PycharmProjects\\Tools\\EZAccessScenesAutoConfig\\Data\\Person\\Info\\cn002.xls"
             co.give_value(file, fileName)
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
 
-    def batchInportClose(self, name="批量导入", Depth=15, foundIndex=1):
+    def batchImportClose(self, name="", Depth=None, foundIndex=None):
         """
         关闭批量导入窗口
         :param targetId:
@@ -581,7 +588,7 @@ class PersonManagement:
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
 
-    def batchInportConfirm(self, AutomationId="btn_confirm"):
+    def batchImportConfirm(self, AutomationId="btn_confirm"):
         """
         确认批量导入
         :param targetId:
@@ -592,6 +599,7 @@ class PersonManagement:
             flag.Click()
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
+
 
 
 class AccessControl:
