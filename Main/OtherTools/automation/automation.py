@@ -12,7 +12,7 @@ def usage():
 <Color=Cyan>-t</Color>      delay <Color=Cyan>time</Color>, default 3 seconds, begin to enumerate after Value seconds, this must be an integer
         you can delay a few seconds and make a window active so automation can enumerate the active window
 <Color=Cyan>-d</Color>      enumerate tree <Color=Cyan>depth</Color>, this must be an integer, if it is null, enumerate the whole tree
-<Color=Cyan>-r</Color>      enumerate from <Color=Cyan>root</Color>:Desktop window, if it is null, enumerate from foreground window
+<Color=Cyan>-r</Color>      enumerate from <Color=Cyan>configRoot</Color>:Desktop window, if it is null, enumerate from foreground window
 <Color=Cyan>-f</Color>      enumerate from <Color=Cyan>focused</Color> control, if it is null, enumerate from foreground window
 <Color=Cyan>-c</Color>      enumerate the control under <Color=Cyan>cursor</Color>, if depth is < 0, enumerate from its ancestor up to depth
 <Color=Cyan>-a</Color>      show <Color=Cyan>ancestors</Color> of the control under cursor
@@ -37,7 +37,7 @@ def main():
     import getopt
     auto.Logger.Write('UIAutomation {} (Python {}.{}.{}, {} bit)\n'.format(auto.VERSION, sys.version_info.major, sys.version_info.minor, sys.version_info.micro, 64 if sys.maxsize > 0xFFFFFFFF else 32))
     options, args = getopt.getopt(sys.argv[1:], 'hrfcand:t:',
-                                  ['help', 'root', 'focus', 'cursor', 'ancestor', 'showAllName', 'depth=',
+                                  ['help', 'configRoot', 'focus', 'cursor', 'ancestor', 'showAllName', 'depth=',
                                    'time='])
     root = False
     focus = False
@@ -51,7 +51,7 @@ def main():
         if o in ('-h', '-help'):
             usage()
             exit(0)
-        elif o in ('-r', '-root'):
+        elif o in ('-r', '-configRoot'):
             root = True
             foreground = False
         elif o in ('-f', '-focus'):

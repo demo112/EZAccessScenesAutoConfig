@@ -5,29 +5,18 @@
     <!--完成后是否保存配置资源-->
     <ifSaveSource>True</ifSaveSource>
     <checkLanguage>cn</checkLanguage>
+    <UserInfo>
+        <username>admin</username>
+        <password>Smbtest00</password>
+    </UserInfo>
     <!--设备信息-->
     <DeviceInfo>
-        <device1>
-            <deviceName>示例设备1</deviceName>
-            <IP>206.10.0.11</IP>
-            <Port>80</Port>
-            <Username>admin</Username>
-            <Password>Smbtest00</Password>
-        </device1>
-        <device2>
-            <deviceName>示例设备2</deviceName>
-            <IP>206.10.0.12</IP>
-            <Port>80</Port>
-            <Username>admin</Username>
-            <Password>Smbtest00</Password>
-        </device2>
-        <device3>
-            <deviceName>示例设备3</deviceName>
-            <IP>206.10.0.13</IP>
-            <Port>80</Port>
-            <Username>admin</Username>
-            <Password>Smbtest00</Password>
-        </device3>
+        <MaxDeviceNum>32</MaxDeviceNum>
+        <deviceName>示例设备</deviceName>
+        <IPRange>206.10.0.0</IPRange>
+        <Port>80</Port>
+        <deviceUsername>admin</deviceUsername>
+        <devicePassword>Smbtest00</devicePassword>
     </DeviceInfo>
     <DepartmentInfo>
         <name>我的公司名字叫12345678ABCDEF</name>
@@ -51,7 +40,6 @@
     </PersonInfo>
     <!--人员照片-->
     <PersonPicture>
-        <url>null</url>
         <zipFileSize>500</zipFileSize>
     </PersonPicture>
     <!--授权配置-->

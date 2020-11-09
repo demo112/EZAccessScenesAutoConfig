@@ -1,4 +1,5 @@
-from Main.components.MakeConfig import *
+from Main.components.personConfig import *
+from Main.common.InterfaceCalling.sqlControl import *
 
 
 def demo():
@@ -17,13 +18,7 @@ def DoBatchImportPerson():
         fileName = PERSONINFO + "\\" + file
         #     导入人员信息
         pmc.BatchImportPerson(fileName=fileName)
-        # 导入后根据屏蔽层  状态判断是否导入完成
-        while True:
-            if pm.chooseDepartment(targetId="4096"):
-                break
-            else:
-                time.sleep(1)
-                pass
+
 
 def DoBatchImportPhoto():
     photoList = os.listdir(PHOTOCOPYPATH)
@@ -32,21 +27,13 @@ def DoBatchImportPhoto():
         file = photoList[index]
         fileName = PHOTOCOPYPATH + "\\" + file
         #     导入图片信息
-        # pmc.BatchImportPhoto(fileName=fileName)
-        time.sleep(5)
-        print("Import Success")
-        # 导入后根据屏蔽层  状态判断是否导入完成
-        while True:
-            if pm.chooseDepartment(targetId="4096"):
-                print(11)
-                break
-            else:
-                time.sleep(1)
-                pass
+        print(file)
+        pmc.BatchImportPhoto(fileName=fileName)
+
+
 
 if __name__ == '__main__':
     pm = PersonManagement()
     pmc = PersonManagementConfig()
     # DoBatchImportPerson()
     DoBatchImportPhoto()
-

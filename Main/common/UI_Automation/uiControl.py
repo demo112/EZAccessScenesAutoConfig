@@ -536,6 +536,20 @@ class PersonManagement:
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
 
+    def checkProgress(self, name="", Depth=None, foundIndex=None):
+        while True:
+            time.sleep(1)
+            try:
+                flag = uiautomation.EditControl(name=name, Depth=Depth, foundIndex=foundIndex)
+                print(flag)
+                if flag:
+                    flag = False
+                    print(time.localtime())
+                else:
+                    break
+            except:
+                break
+
     def chooseDepartment(self, targetId=""):
         cc = ControlClint()
         try:
@@ -599,7 +613,6 @@ class PersonManagement:
             flag.Click()
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
-
 
 
 class AccessControl:
