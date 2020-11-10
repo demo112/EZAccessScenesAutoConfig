@@ -118,29 +118,58 @@ class HttpMethod(object):
             # raise http.client.BadStatusLine('Badstatusline')
         return response
 
-
-class DeviceInterfaceManagement(HttpMethod):
-    def deviceAdd(self, name, ip, port, deviceUsername, devicePassword):
-        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_ADD_URL)
-        DEVICE_ADD_PARAM["deviceName"] = name
-        DEVICE_ADD_PARAM["deviceIP"] = ip
-        DEVICE_ADD_PARAM["devicePort"] = port
-        DEVICE_ADD_PARAM["deviceUsername"] = deviceUsername
-        DEVICE_ADD_PARAM["devicePassword"] = devicePassword
-        deviceData = DEVICE_ADD_PARAM
-        body = json.JSONEncoder().encode(deviceData)
+    def OPENAPI_POST(self,url, headers, param):
         response = b""
-        DEVICE_ADD_HEADERS["Content-Length"] = len(body)
-        DEVICE_ADD_HEADERS["Authorization"] = self.token
-        headers = DEVICE_ADD_HEADERS
         try:
-            self.httpClient.request("POST", url, body=body, headers=headers)
+            self.httpClient.request("POST", url, body=param, headers=headers)
             time.sleep(1)
             response = self.httpClient.getresponse().read()
         except Exception as e:
             self.httpClient.close()
             self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
             # raise http.client.BadStatusLine('Badstatusline')
+        return response
+
+
+class DeviceInterfaceManagement(HttpMethod):
+    # def deviceAdd(self, name, ip, port, deviceUsername, devicePassword):
+    #     url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_ADD_URL)
+    #     DEVICE_ADD_PARAM["deviceName"] = name
+    #     DEVICE_ADD_PARAM["deviceIP"] = ip
+    #     DEVICE_ADD_PARAM["devicePort"] = port
+    #     DEVICE_ADD_PARAM["deviceUsername"] = deviceUsername
+    #     DEVICE_ADD_PARAM["devicePassword"] = devicePassword
+    #     deviceData = DEVICE_ADD_PARAM
+    #     body = json.JSONEncoder().encode(deviceData)
+    #     response = b""
+    #     DEVICE_ADD_HEADERS["Content-Length"] = len(body)
+    #     DEVICE_ADD_HEADERS["Authorization"] = self.token
+    #     headers = DEVICE_ADD_HEADERS
+    #     try:
+    #         self.httpClient.request("POST", url, body=body, headers=headers)
+    #         time.sleep(1)
+    #         response = self.httpClient.getresponse().read()
+    #     except Exception as e:
+    #         self.httpClient.close()
+    #         self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
+    #         # raise http.client.BadStatusLine('Badstatusline')
+    #     return response
+    def deviceAdd(self, name, ip, port, deviceUsername, devicePassword):
+        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_ADD_URL)
+        deviceData = DEVICE_ADD_PARAM
+        headers = DEVICE_ADD_HEADERS
+
+        deviceData["deviceName"] = name
+        deviceData["deviceIP"] = ip
+        deviceData["devicePort"] = port
+        deviceData["deviceUsername"] = deviceUsername
+        deviceData["devicePassword"] = devicePassword
+
+        param = json.JSONEncoder().encode(deviceData)
+        headers["Content-Length"] = len(param)
+        headers["Authorization"] = self.token
+
+        response = self.OPENAPI_POST(url, headers, param)
         return response
 
     def devicesAdd(self, DNS="206.10.0.0", index=24, Num=DEVICEUSERINFO["MaxDeviceNum"]):
@@ -169,6 +198,11 @@ class DeviceInterfaceManagement(HttpMethod):
                 log.warning(e)
 
     def deviceRemove(self, *args):
+        """
+
+        :param args: 输入设备列表序列指定删除设备，输入“all”删除所有
+        :return:
+        """
         # 对设备列表数据进行预处理
         """
 
@@ -189,22 +223,15 @@ class DeviceInterfaceManagement(HttpMethod):
 
         url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_DELETE_URL)
         # 获取需删除设备deviceId,构建请求内容，添加需删除设备
-        DEVICE_DELETE_PARAM["deviceIdList"] = deviceIDList
         deviceData = DEVICE_DELETE_PARAM
-
-        body = json.JSONEncoder().encode(deviceData)
-        response = b""
-        DEVICE_DELETE_HEADERS["Content-Length"] = len(body)
-        DEVICE_DELETE_HEADERS["Authorization"] = self.token
         headers = DEVICE_DELETE_HEADERS
-        try:
-            self.httpClient.request("POST", url, body=body, headers=headers)
-            time.sleep(1)
-            response = self.httpClient.getresponse().read()
-        except Exception as e:
-            self.httpClient.close()
-            self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
-            # raise http.client.BadStatusLine('Badstatusline')
+
+        deviceData["deviceIdList"] = deviceIDList
+        body = json.JSONEncoder().encode(deviceData)
+
+        headers["Content-Length"] = len(body)
+        headers["Authorization"] = self.token
+        response = self.OPENAPI_POST(url, headers, body)
         return response
 
     def deviceChange(self):
@@ -235,21 +262,13 @@ class DeviceInterfaceManagement(HttpMethod):
         """
         url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_SEARCH_URL)
         # 获取需删除设备deviceId,构建请求内容，添加需删除设备
+        headers = DEVICE_DELETE_HEADERS
         deviceData = DEVICE_DELETE_PARAM
         body = json.JSONEncoder().encode(deviceData)
-        response = b""
-        headers = DEVICE_DELETE_HEADERS
+
         headers["Content-Length"] = len(body)
         headers["Authorization"] = self.token
-        try:
-            self.httpClient.request("POST", url, body=body, headers=headers)
-            time.sleep(1)
-            response = self.httpClient.getresponse().read()
-        except Exception as e:
-            self.httpClient.close()
-            self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
-            # raise http.client.BadStatusLine('Badstatusline')
-
+        response = self.OPENAPI_POST(url, headers, body)
         return response
 
 
@@ -269,5 +288,5 @@ class AccessInterfaceManagement(HttpMethod):
 
 if __name__ == '__main__':
     dm = DeviceInterfaceManagement()
-    res = dm.devicesAdd()
-    # res1 = dm.deviceRemove("all")
+    # res = dm.devicesAdd()
+    res1 = dm.deviceRemove("all")
