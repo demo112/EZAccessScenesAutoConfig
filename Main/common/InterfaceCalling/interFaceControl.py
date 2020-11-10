@@ -7,6 +7,7 @@ import http.client
 from Data.Interface.__init__ import *
 from Main.common.InterfaceCalling.sqlControl import SqlIO
 from IPy import IP
+
 global null
 null = ''
 sql = SqlIO()
@@ -58,7 +59,6 @@ class HttpMethod(object):
             self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=60)  # 重新建立链接
             # raise http.client.HTTPConnection.BadStatusLine('Badstatusline')
         return accessToken
-
 
     def md5(self, str):
         m = hashlib.md5()
@@ -119,20 +119,20 @@ class HttpMethod(object):
         return response
 
 
-class DeviceManagement(HttpMethod):
+class DeviceInterfaceManagement(HttpMethod):
     def deviceAdd(self, name, ip, port, deviceUsername, devicePassword):
-        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_URL)
-        DEVICE_PARAM["deviceName"] = name
-        DEVICE_PARAM["deviceIP"] = ip
-        DEVICE_PARAM["devicePort"] = port
-        DEVICE_PARAM["deviceUsername"] = deviceUsername
-        DEVICE_PARAM["devicePassword"] = devicePassword
-        deviceData = DEVICE_PARAM
+        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_ADD_URL)
+        DEVICE_ADD_PARAM["deviceName"] = name
+        DEVICE_ADD_PARAM["deviceIP"] = ip
+        DEVICE_ADD_PARAM["devicePort"] = port
+        DEVICE_ADD_PARAM["deviceUsername"] = deviceUsername
+        DEVICE_ADD_PARAM["devicePassword"] = devicePassword
+        deviceData = DEVICE_ADD_PARAM
         body = json.JSONEncoder().encode(deviceData)
         response = b""
-        DEVICE_HEADERS["Content-Length"] = len(body)
-        DEVICE_HEADERS["Authorization"] = self.token
-        headers = DEVICE_HEADERS
+        DEVICE_ADD_HEADERS["Content-Length"] = len(body)
+        DEVICE_ADD_HEADERS["Authorization"] = self.token
+        headers = DEVICE_ADD_HEADERS
         try:
             self.httpClient.request("POST", url, body=body, headers=headers)
             time.sleep(1)
@@ -143,7 +143,7 @@ class DeviceManagement(HttpMethod):
             # raise http.client.BadStatusLine('Badstatusline')
         return response
 
-    def decivesAdd(self, DNS = "206.10.0.0", index=24, Num = DEVICEUSERINFO["MaxDeviceNum"]):
+    def devicesAdd(self, DNS="206.10.0.0", index=24, Num=DEVICEUSERINFO["MaxDeviceNum"]):
         """
 
         :param DNS: 掩码
@@ -151,7 +151,7 @@ class DeviceManagement(HttpMethod):
         :param Num: 设备数量
         :return:
         """
-        IpList = IP("%s/%d"% (DNS, index))[2:(int(Num) + 2)]
+        IpList = IP("%s/%d" % (DNS, index))[2:(int(Num) + 2)]
         port = int(DEVICEUSERINFO["Port"])
         deviceUsername = DEVICEUSERINFO["deviceUsername"]
         devicePassword = DEVICEUSERINFO["devicePassword"]
@@ -159,23 +159,115 @@ class DeviceManagement(HttpMethod):
             ip = str(ip)
             name = DEVICEUSERINFO["deviceName"]
             name += ip
-            self.deviceAdd(name, ip, port, deviceUsername, devicePassword)
-            # print(ip)
-        # deviceName =
-        # for ip
-        #     self.deviceAdd()
+            try:
+                res = self.deviceAdd(name, ip, port, deviceUsername, devicePassword)
+                status = self.getStatusCode(res)
+                if status != 200:
+                    raise "%s设备添加失败,错误码%s" % (name, status)
+            except Exception as e:
+                log = CreateLog().get_logger()
+                log.warning(e)
 
-    def deviceDelete(self):
-        pass
+    def deviceRemove(self, *args):
+        # 对设备列表数据进行预处理
+        """
+
+        :param deleteThem:
+        :return:
+        """
+        response = self.deviceList()
+        # 筛选删除范围
+        if ("all" or "All") not in args:
+            deviceList = [self.getResData(response)["deviceList"][i - 1] for i in args]
+        else:
+            deviceList = self.getResData(response)["deviceList"]
+
+        deviceIDList = []
+        for device in deviceList:
+            deviceId = device["deviceId"]
+            deviceIDList.append(deviceId)
+
+        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_DELETE_URL)
+        # 获取需删除设备deviceId,构建请求内容，添加需删除设备
+        DEVICE_DELETE_PARAM["deviceIdList"] = deviceIDList
+        deviceData = DEVICE_DELETE_PARAM
+
+        body = json.JSONEncoder().encode(deviceData)
+        response = b""
+        DEVICE_DELETE_HEADERS["Content-Length"] = len(body)
+        DEVICE_DELETE_HEADERS["Authorization"] = self.token
+        headers = DEVICE_DELETE_HEADERS
+        try:
+            self.httpClient.request("POST", url, body=body, headers=headers)
+            time.sleep(1)
+            response = self.httpClient.getresponse().read()
+        except Exception as e:
+            self.httpClient.close()
+            self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
+            # raise http.client.BadStatusLine('Badstatusline')
+        return response
 
     def deviceChange(self):
+
         pass
 
     def deviceList(self):
+        """
+
+        :return:返回所有设备的信息
+        	"code": 200,
+            "message": "succeed",
+            "data": {
+                "total": 32,
+                "deviceList": [
+                    {
+                        "deviceName": "示例设备206.10.0.2",
+                        "deviceUserName": "admin",
+                        "devicePassword": "Smbtest00",
+                        "deviceIP": "206.10.0.2",
+                        "devicePort": 80,
+                        "deviceModel": null,
+                        "deviceVersion": null,
+                        "deviceId": "116417820157280256",
+                        "status": 0,
+                        "deviceType": 0
+                    },]}}
+        """
+        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_SEARCH_URL)
+        # 获取需删除设备deviceId,构建请求内容，添加需删除设备
+        deviceData = DEVICE_DELETE_PARAM
+        body = json.JSONEncoder().encode(deviceData)
+        response = b""
+        headers = DEVICE_DELETE_HEADERS
+        headers["Content-Length"] = len(body)
+        headers["Authorization"] = self.token
+        try:
+            self.httpClient.request("POST", url, body=body, headers=headers)
+            time.sleep(1)
+            response = self.httpClient.getresponse().read()
+        except Exception as e:
+            self.httpClient.close()
+            self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
+            # raise http.client.BadStatusLine('Badstatusline')
+
+        return response
+
+
+class AccessInterfaceManagement(HttpMethod):
+    def accessAdd(self):
         pass
 
+    def accessRemove(self):
+        pass
+
+    def accessChange(self):
+        pass
+
+    def accessSearch(self):
+        pass
+
+
 if __name__ == '__main__':
-    dm = DeviceManagement()
-    # res = dm.deviceAdd("123", "206.10.0.130", "80")
-    # print(res)
-    dm.decivesAdd()
+    dm = DeviceInterfaceManagement()
+    res = dm.devicesAdd()
+    # res1 = dm.deviceRemove("all")
