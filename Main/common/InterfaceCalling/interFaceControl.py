@@ -29,6 +29,25 @@ class HttpMethod(object):
         # 获取鉴权token值
         self.token = self.getAccessToken()
 
+    def __Template__(self):
+
+        # 预处信息
+        sq = SqlIO()
+        groupId = sq.XXXX()
+        # 基于接口构造请求
+        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_DELETE_URL)
+        headers = ACCESS_DELETE_HEADERS
+        accessData = ACCESS_DELETE_PARAM
+        # 调整请求体内容
+        accessData["permissionGroupId"] = groupId[0][0]
+        body = json.JSONEncoder().encode(accessData)
+        # 调整请求头内容
+        headers["Content-Length"] = len(body)
+        headers["Authorization"] = self.token
+        # 发起请求并捕捉响应报文
+        response = self.OPENAPI_POST(url, headers, body)
+        return response
+
     def getAccessToken(self):
         """
         获取鉴权Token值
@@ -118,7 +137,7 @@ class HttpMethod(object):
             # raise http.client.BadStatusLine('Badstatusline')
         return response
 
-    def OPENAPI_POST(self,url, headers, param):
+    def OPENAPI_POST(self, url, headers, param):
         response = b""
         try:
             self.httpClient.request("POST", url, body=param, headers=headers)
@@ -172,7 +191,7 @@ class DeviceInterfaceManagement(HttpMethod):
         response = self.OPENAPI_POST(url, headers, param)
         return response
 
-    def devicesAdd(self, DNS="206.10.0.0", index=24, Num=DEVICEUSERINFO["MaxDeviceNum"]):
+    def devicesAdd(self, DNS="206.10.10.0", index=24, Num=DEVICEUSERINFO["MaxDeviceNum"]):
         """
 
         :param DNS: 掩码
@@ -273,11 +292,70 @@ class DeviceInterfaceManagement(HttpMethod):
 
 
 class AccessInterfaceManagement(HttpMethod):
-    def accessAdd(self):
-        pass
+    def accessAdd(self, name, personList, deviceList):
+        """
+        创建门禁收授权
+        :param name: 授权组名称
+        :param personList: 授权人员的序列编号列表
+        :param deviceList: 授权设备的序列编号列表
+        :return:
+        """
 
-    def accessRemove(self):
-        pass
+        def indexToId(tblType, indexLIst):
+            """
+            根据需求获取指定人员、设备的唯一id
+            :param indexLIst:
+            :return:
+            """
+            sql = SqlIO()
+            maxNum = int(DEVICEUSERINFO["MaxDeviceNum"])
+            # 判断所需列表
+            if "device" == tblType:
+                indexLIst = indexLIst[0:maxNum]
+                idList = sql.search("dev_id", "ucs", "tbl_ac_device")
+            elif "person" == tblType:
+                idList = sql.search("person_id", "ucs", "tbl_person")
+            else:
+                idList = []
+
+            _needList = []
+            for i in indexLIst:
+                _needList.append(int(idList[i][0]))
+            return _needList
+
+        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_ADD_URL)
+        headers = ACCESS_ADD_HEADERS
+        accessData = ACCESS_ADD_PARAM
+        accessData["permissionGroupName"] = name
+
+        accessData["personIdList"] = indexToId("person", personList)
+        accessData["deviceIdList"] = indexToId("device", deviceList)
+        body = json.JSONEncoder().encode(accessData)
+
+        headers["Content-Length"] = len(body)
+        headers["Authorization"] = self.token
+        response = self.OPENAPI_POST(url, headers, body)
+        return response
+
+    def accessRemove(self, name):
+        """
+
+        :param args: 需删除的权限组名称
+        :return:
+        """
+        # 预处理指定授权组信息
+        sq = SqlIO()
+        groupId = sq.readInfo("fl_permission_id", "fl_permission_name", name, "ucs", "tbl_acs_permission")
+        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_DELETE_URL)
+        headers = ACCESS_DELETE_HEADERS
+        accessData = ACCESS_DELETE_PARAM
+        accessData["permissionGroupId"] = groupId[0][0]
+        body = json.JSONEncoder().encode(accessData)
+
+        headers["Content-Length"] = len(body)
+        headers["Authorization"] = self.token
+        response = self.OPENAPI_POST(url, headers, body)
+        return response
 
     def accessChange(self):
         pass
@@ -286,7 +364,66 @@ class AccessInterfaceManagement(HttpMethod):
         pass
 
 
+class AttendanceInterfaceMangement(HttpMethod):
+    def attendanceAdd(self):
+        pass
+
+    def attendanceRemove(self):
+        pass
+
+    def attendanceChange(self):
+        pass
+
+    def attendanceSearch(self):
+        pass
+
+
+class RegulationInterFaceMgt(AttendanceInterfaceMangement):
+    def RegulationUpdate(self):
+        # 预处信息
+        sq = SqlIO()
+        groupId = sq.XXXX()
+        # 基于接口构造请求
+        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_DELETE_URL)
+        headers = ACCESS_DELETE_HEADERS
+        accessData = ACCESS_DELETE_PARAM
+        # 调整请求体内容
+        accessData["permissionGroupId"] = groupId[0][0]
+        body = json.JSONEncoder().encode(accessData)
+        # 调整请求头内容
+        headers["Content-Length"] = len(body)
+        headers["Authorization"] = self.token
+        # 发起请求并捕捉响应报文
+        response = self.OPENAPI_POST(url, headers, body)
+        return response
+
+
+class StaffScheduleInterFaceMgt(AttendanceInterfaceMangement):
+    pass
+
+
+class AttendanceMgtInterFaceMgt(AttendanceInterfaceMangement):
+    pass
+
+
+class AttendanceStaticInterFaceMgt(AttendanceInterfaceMangement):
+    pass
+
+
+class PassThuInterfaceManagement(HttpMethod):
+    pass
+
+
+class SystemConfigurationManagement(HttpMethod):
+    pass
+
+
 if __name__ == '__main__':
-    dm = DeviceInterfaceManagement()
-    # res = dm.devicesAdd()
-    res1 = dm.deviceRemove("all")
+    am = AccessInterfaceManagement()
+    a = am.accessAdd("123", [2], range(100))
+    print(a)
+    a1 = am.accessRemove('123')
+    print(a1)
+    # dim = DeviceInterfaceManagement()
+    # dim.deviceRemove("all")
+    # dim.devicesAdd(DNS="206.10.10.0")

@@ -49,7 +49,6 @@ TOKEN_PARAM = {
     "password": "",
 }
 
-
 DEVICE_ADD_URL = "/openapi/device/ac/add"
 DEVICE_ADD_HEADERS = COMMON_HEADERS
 DEVICE_ADD_PARAM = {
@@ -67,15 +66,32 @@ DEVICE_SEARCH_PARAM = {}
 DEVICE_DELETE_URL = "/openapi/device/ac/batch/delete"
 DEVICE_DELETE_HEADERS = COMMON_HEADERS
 DEVICE_DELETE_PARAM = {
-    "deviceIdList":[],
+    "deviceIdList": [],
 }
 
 ACCESS_ADD_URL = "/openapi/acs/permission/group/add"
 ACCESS_ADD_HEADERS = COMMON_HEADERS
 ACCESS_ADD_PARAM = {
-    "permissionGroupName":"",
-    "personIdList":[],
-    "deviceIdList":[]
+    "permissionGroupName": "",
+    "personIdList": [],
+    "deviceIdList": []
+}
+
+ACCESS_DELETE_URL = "/openapi/acs/permission/group/delete"
+ACCESS_DELETE_HEADERS = COMMON_HEADERS
+ACCESS_DELETE_PARAM = {
+    "permissionGroupId": ""
+}
+
+REGULATION_UPDATE_URL = "/atnd/attendance/rule/update?randomKey=1605748746845"
+REGULATION_UPDATE_HEADERS = COMMON_HEADERS
+REGULATION_UPDATE_PARAM = {
+    "dayStartTime": "04:00",
+    "timeStep": 0,
+    "afterWorkMinute": 0,
+    "beforeWorkEndMinute": 0,
+    "unSignInTag": 0,
+    "unSignOutTag": 0
 }
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 from Main.components.personConfig import *
 from Main.common.InterfaceCalling.sqlControl import *
-
+from Main.common.InterfaceCalling.interFaceControl import *
 
 def demo():
     pass
@@ -8,6 +8,8 @@ def demo():
 
 def DoBatchImportPerson():
     # 遍历导入文件
+    pm = PersonManagement()
+    pmc = PersonManagementConfig()
     personList = os.listdir(PERSONINFO)
     for index in range(0, len(personList)):
         #     定位部门
@@ -21,6 +23,7 @@ def DoBatchImportPerson():
 
 
 def DoBatchImportPhoto():
+    pmc = PersonManagementConfig()
     photoList = os.listdir(PHOTOCOPYPATH)
     for index in range(0, len(photoList)):
         #     构造文件路径
@@ -30,10 +33,12 @@ def DoBatchImportPhoto():
         print(file)
         pmc.BatchImportPhoto(fileName=fileName)
 
+def DoBatchAddDevice():
+    dim = DeviceInterfaceManagement()
+    MaxDeviceNum = DEVICEUSERINFO["MaxDeviceNum"]
+    dim.devicesAdd(range(MaxDeviceNum))
 
 
 if __name__ == '__main__':
-    pm = PersonManagement()
-    pmc = PersonManagementConfig()
-    # DoBatchImportPerson()
+    DoBatchImportPerson()
     DoBatchImportPhoto()

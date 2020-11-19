@@ -178,6 +178,6 @@ if __name__ == '__main__':
     # copyFilePath = PHOTOCOPYPATH
     # clon.makePhoto(motherFilePath, copyFilePath)
     # clon.zipPhoto(motherFilePath, copyFilePath)
-    # makePersonList()
-    makePhotoZip()
+    makePersonList()
+    # makePhotoZip()
     pass

@@ -13,7 +13,7 @@
     <DeviceInfo>
         <MaxDeviceNum>32</MaxDeviceNum>
         <deviceName>示例设备</deviceName>
-        <IPRange>206.10.0.0</IPRange>
+        <VLAN>206.10.10.0</VLAN>
         <Port>80</Port>
         <deviceUsername>admin</deviceUsername>
         <devicePassword>Smbtest00</devicePassword>
@@ -43,10 +43,10 @@
         <zipFileSize>500</zipFileSize>
     </PersonPicture>
     <!--授权配置-->
-    <Authorize>
+    <Access>
         <DeviceRange>(1,32)</DeviceRange>
         <personRange>(1,5000)</personRange>
-    </Authorize>
+    </Access>
     <!--考勤配置-->
     <Access>
         null

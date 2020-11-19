@@ -29,7 +29,7 @@ USERINFO = {
 # 设备信息配置
 DEVICEUSERINFO = {
     "deviceName": main_root.find("DeviceInfo").find("deviceName").text,
-    "IPRange": main_root.find("DeviceInfo").find("IPRange").text,
+    "VLAN": main_root.find("DeviceInfo").find("VLAN").text,
     "MaxDeviceNum": main_root.find("DeviceInfo").find("MaxDeviceNum").text,
     "Port": main_root.find("DeviceInfo").find("Port").text,
     "deviceUsername": main_root.find("DeviceInfo").find("deviceUsername").text,
