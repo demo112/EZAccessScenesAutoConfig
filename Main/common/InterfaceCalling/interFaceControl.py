@@ -7,10 +7,12 @@ import http.client
 from Data.Interface.__init__ import *
 from Main.common.InterfaceCalling.sqlControl import SqlIO
 from IPy import IP
+from Main.OtherTools.Log.CreateLog import CreateLog
 
 global null
 null = ''
 sql = SqlIO()
+log = CreateLog().get_logger()
 
 
 class StrToAes:
@@ -33,13 +35,13 @@ class HttpMethod(object):
 
         # 预处信息
         sq = SqlIO()
-        groupId = sq.XXXX()
+
         # 基于接口构造请求
-        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_DELETE_URL)
-        headers = ACCESS_DELETE_HEADERS
-        accessData = ACCESS_DELETE_PARAM
+        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_REMOVE_URL)
+        headers = ACCESS_REMOVE_HEADERS
+        accessData = ACCESS_REMOVE_PARAM
         # 调整请求体内容
-        accessData["permissionGroupId"] = groupId[0][0]
+        accessData["permissionGroupId"] = [0][0]
         body = json.JSONEncoder().encode(accessData)
         # 调整请求头内容
         headers["Content-Length"] = len(body)
@@ -150,29 +152,42 @@ class HttpMethod(object):
         return response
 
 
+class PersonInterfaceManagement(HttpMethod):
+    def personRemove(self, *args):
+        """
+        默认删除所有人，或指定删除某一部分人
+        :param args: 待删除的人员界面序列列表
+        :return:
+        """
+        # 预处信息
+        sq = SqlIO()
+        _allPerson = sq.search("person_id", "ucs", "tbl_person")
+        allPerson = [int(per[0]) for per in _allPerson]
+        if (args == []) or ("all" in args):
+            allPerson = allPerson
+        elif args:
+            allPerson = args
+        else:
+            allPerson = []
+            log.info('人员列表有误，未删除人员，请核验后重试')
+        print(allPerson)
+        # 基于接口构造请求
+        url = "http://%s:%d%s" % (self.server_ip, self.port, PERSON_REMOVE_URL)
+        headers = ACCESS_REMOVE_HEADERS
+        accessData = ACCESS_REMOVE_PARAM
+        # 调整请求体内容
+        accessData["idList"] = allPerson
+        body = json.JSONEncoder().encode(accessData)
+        # 调整请求头内容
+        headers["Content-Length"] = len(body)
+        headers["Authorization"] = self.token
+        # 发起请求并捕捉响应报文
+        response = self.OPENAPI_POST(url, headers, body)
+        return response
+
+
 class DeviceInterfaceManagement(HttpMethod):
-    # def deviceAdd(self, name, ip, port, deviceUsername, devicePassword):
-    #     url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_ADD_URL)
-    #     DEVICE_ADD_PARAM["deviceName"] = name
-    #     DEVICE_ADD_PARAM["deviceIP"] = ip
-    #     DEVICE_ADD_PARAM["devicePort"] = port
-    #     DEVICE_ADD_PARAM["deviceUsername"] = deviceUsername
-    #     DEVICE_ADD_PARAM["devicePassword"] = devicePassword
-    #     deviceData = DEVICE_ADD_PARAM
-    #     body = json.JSONEncoder().encode(deviceData)
-    #     response = b""
-    #     DEVICE_ADD_HEADERS["Content-Length"] = len(body)
-    #     DEVICE_ADD_HEADERS["Authorization"] = self.token
-    #     headers = DEVICE_ADD_HEADERS
-    #     try:
-    #         self.httpClient.request("POST", url, body=body, headers=headers)
-    #         time.sleep(1)
-    #         response = self.httpClient.getresponse().read()
-    #     except Exception as e:
-    #         self.httpClient.close()
-    #         self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
-    #         # raise http.client.BadStatusLine('Badstatusline')
-    #     return response
+
     def deviceAdd(self, name, ip, port, deviceUsername, devicePassword):
         url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_ADD_URL)
         deviceData = DEVICE_ADD_PARAM
@@ -223,11 +238,7 @@ class DeviceInterfaceManagement(HttpMethod):
         :return:
         """
         # 对设备列表数据进行预处理
-        """
 
-        :param deleteThem:
-        :return:
-        """
         response = self.deviceList()
         # 筛选删除范围
         if ("all" or "All") not in args:
@@ -240,10 +251,10 @@ class DeviceInterfaceManagement(HttpMethod):
             deviceId = device["deviceId"]
             deviceIDList.append(deviceId)
 
-        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_DELETE_URL)
+        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_REMOVE_URL)
         # 获取需删除设备deviceId,构建请求内容，添加需删除设备
-        deviceData = DEVICE_DELETE_PARAM
-        headers = DEVICE_DELETE_HEADERS
+        deviceData = DEVICE_REMOVE_PARAM
+        headers = DEVICE_REMOVE_HEADERS
 
         deviceData["deviceIdList"] = deviceIDList
         body = json.JSONEncoder().encode(deviceData)
@@ -253,7 +264,7 @@ class DeviceInterfaceManagement(HttpMethod):
         response = self.OPENAPI_POST(url, headers, body)
         return response
 
-    def deviceChange(self):
+    def deviceUpdate(self):
 
         pass
 
@@ -281,8 +292,8 @@ class DeviceInterfaceManagement(HttpMethod):
         """
         url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_SEARCH_URL)
         # 获取需删除设备deviceId,构建请求内容，添加需删除设备
-        headers = DEVICE_DELETE_HEADERS
-        deviceData = DEVICE_DELETE_PARAM
+        headers = DEVICE_REMOVE_HEADERS
+        deviceData = DEVICE_REMOVE_PARAM
         body = json.JSONEncoder().encode(deviceData)
 
         headers["Content-Length"] = len(body)
@@ -346,9 +357,9 @@ class AccessInterfaceManagement(HttpMethod):
         # 预处理指定授权组信息
         sq = SqlIO()
         groupId = sq.readInfo("fl_permission_id", "fl_permission_name", name, "ucs", "tbl_acs_permission")
-        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_DELETE_URL)
-        headers = ACCESS_DELETE_HEADERS
-        accessData = ACCESS_DELETE_PARAM
+        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_REMOVE_URL)
+        headers = ACCESS_REMOVE_HEADERS
+        accessData = ACCESS_REMOVE_PARAM
         accessData["permissionGroupId"] = groupId[0][0]
         body = json.JSONEncoder().encode(accessData)
 
@@ -357,7 +368,7 @@ class AccessInterfaceManagement(HttpMethod):
         response = self.OPENAPI_POST(url, headers, body)
         return response
 
-    def accessChange(self):
+    def accessUpdate(self):
         pass
 
     def accessSearch(self):
@@ -371,7 +382,7 @@ class AttendanceInterfaceMangement(HttpMethod):
     def attendanceRemove(self):
         pass
 
-    def attendanceChange(self):
+    def attendanceUpdate(self):
         pass
 
     def attendanceSearch(self):
@@ -380,22 +391,7 @@ class AttendanceInterfaceMangement(HttpMethod):
 
 class RegulationInterFaceMgt(AttendanceInterfaceMangement):
     def RegulationUpdate(self):
-        # 预处信息
-        sq = SqlIO()
-        groupId = sq.XXXX()
-        # 基于接口构造请求
-        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_DELETE_URL)
-        headers = ACCESS_DELETE_HEADERS
-        accessData = ACCESS_DELETE_PARAM
-        # 调整请求体内容
-        accessData["permissionGroupId"] = groupId[0][0]
-        body = json.JSONEncoder().encode(accessData)
-        # 调整请求头内容
-        headers["Content-Length"] = len(body)
-        headers["Authorization"] = self.token
-        # 发起请求并捕捉响应报文
-        response = self.OPENAPI_POST(url, headers, body)
-        return response
+        pass
 
 
 class StaffScheduleInterFaceMgt(AttendanceInterfaceMangement):
@@ -420,10 +416,11 @@ class SystemConfigurationManagement(HttpMethod):
 
 if __name__ == '__main__':
     am = AccessInterfaceManagement()
-    a = am.accessAdd("123", [2], range(100))
-    print(a)
+    # a = am.accessAdd("123", [2], range(100))
+    # print(a)
     a1 = am.accessRemove('123')
     print(a1)
-    # dim = DeviceInterfaceManagement()
-    # dim.deviceRemove("all")
-    # dim.devicesAdd(DNS="206.10.10.0")
+    dim = DeviceInterfaceManagement()
+    ab = dim.deviceRemove("all")
+    print(ab)
+    dim.devicesAdd(DNS="206.10.10.0")

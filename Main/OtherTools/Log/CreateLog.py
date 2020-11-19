@@ -9,11 +9,13 @@
 import os
 import logging
 from logging.handlers import RotatingFileHandler
+from Main.__init__ import HOMEPATH
 
 
 class CreateLog():
     def __init__(self, level='DEBUG'):
-        path = os.getcwd() + "\Log"
+        # path = os.getcwd() + "\Log"
+        path = HOMEPATH + "\Log"
         isExists = os.path.exists(path)
         if not isExists:
             os.makedirs(path)
@@ -22,7 +24,8 @@ class CreateLog():
         self.logger.setLevel(level)  # 日志收集器的级别
 
         # 输出渠道 相对路径
-        fh = RotatingFileHandler(file_path, mode='a', maxBytes=5 * 1024 * 1024, backupCount=3, encoding='UTF-8', delay=False)
+        fh = RotatingFileHandler(file_path, mode='a', maxBytes=5 * 1024 * 1024, backupCount=3, encoding='UTF-8',
+                                 delay=False)
         # sh = logging.StreamHandler()
 
         fh.setLevel(level)  # 输出渠道的级别

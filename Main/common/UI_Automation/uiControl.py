@@ -1,9 +1,9 @@
 # 该文件主要放置基本操作，如：点击切换页面，为某文本框赋值，删除某条记录等
 import datetime
+import uiautomation
 
 from Main.common.UI_Automation.controlOperation import *
 
-import uiautomation
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))

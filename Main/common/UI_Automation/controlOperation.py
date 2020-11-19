@@ -5,6 +5,8 @@ import sys
 import time
 import autoit
 from Main.common.UI_Automation.__init__ import *
+from Main.OtherTools.Log.CreateLog import CreateLog
+log = CreateLog().get_logger()
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))

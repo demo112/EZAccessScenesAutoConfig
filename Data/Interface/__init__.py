@@ -49,6 +49,13 @@ TOKEN_PARAM = {
     "password": "",
 }
 
+
+PERSON_REMOVE_URL = "/openapi/person/delete"
+PERSON_REMOVE_HEADERS = COMMON_HEADERS
+PERSON_REMOVE_PARAM = {
+    "idList":[]
+}
+
 DEVICE_ADD_URL = "/openapi/device/ac/add"
 DEVICE_ADD_HEADERS = COMMON_HEADERS
 DEVICE_ADD_PARAM = {
@@ -63,9 +70,9 @@ DEVICE_SEARCH_URL = "/openapi/device/ac/list"
 DEVICE_SEARCH_HEADERS = COMMON_HEADERS
 DEVICE_SEARCH_PARAM = {}
 
-DEVICE_DELETE_URL = "/openapi/device/ac/batch/delete"
-DEVICE_DELETE_HEADERS = COMMON_HEADERS
-DEVICE_DELETE_PARAM = {
+DEVICE_REMOVE_URL = "/openapi/device/ac/batch/delete"
+DEVICE_REMOVE_HEADERS = COMMON_HEADERS
+DEVICE_REMOVE_PARAM = {
     "deviceIdList": [],
 }
 
@@ -77,9 +84,9 @@ ACCESS_ADD_PARAM = {
     "deviceIdList": []
 }
 
-ACCESS_DELETE_URL = "/openapi/acs/permission/group/delete"
-ACCESS_DELETE_HEADERS = COMMON_HEADERS
-ACCESS_DELETE_PARAM = {
+ACCESS_REMOVE_URL = "/openapi/acs/permission/group/delete"
+ACCESS_REMOVE_HEADERS = COMMON_HEADERS
+ACCESS_REMOVE_PARAM = {
     "permissionGroupId": ""
 }
 

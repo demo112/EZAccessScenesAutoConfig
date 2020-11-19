@@ -1,8 +1,6 @@
 # 主程序，实现主业务流程
 import os
 from xml.etree import ElementTree  as  ET
-from Main.OtherTools.Log.CreateLog import *
-log = CreateLog().get_logger()
 # 路径配置
 HOMEPATH = os.path.abspath(os.path.join(os.path.abspath(__file__), "..\\.."))
 # 场景配置路径
