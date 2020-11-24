@@ -18,6 +18,10 @@ INERTFACEPATH = HOMEPATH + "\\Data\\InterFAce"
 main_xl = ET.parse(CONFIGPATH + "\\" + "config.xml")
 main_root = main_xl.getroot()
 
+# 配置变更配置
+IFSAVESOURSE = main_root.find("ifSaveSource").text
+IFRESTORE = main_root.find("ifrestore").text
+
 # 用户信息配置
 USERINFO = {
     "username": main_root.find("UserInfo").find("username").text,

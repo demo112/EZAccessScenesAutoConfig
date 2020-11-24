@@ -153,28 +153,28 @@ class HttpMethod(object):
 
 
 class PersonInterfaceManagement(HttpMethod):
-    def personRemove(self, *args):
+    def personRemove(self, idList=None):
         """
         默认删除所有人，或指定删除某一部分人
-        :param args: 待删除的人员界面序列列表
+        :param idList: 待删除的人员界面序列列表
         :return:
         """
         # 预处信息
-        sq = SqlIO()
-        _allPerson = sq.search("person_id", "ucs", "tbl_person")
-        allPerson = [int(per[0]) for per in _allPerson]
-        if (args == []) or ("all" in args):
+        if (idList == None) or ("all" == idList):
+            sq = SqlIO()
+            _allPerson = sq.search("person_id", "ucs", "tbl_person")
+            allPerson = [int(per[0]) for per in _allPerson]
             allPerson = allPerson
-        elif args:
-            allPerson = args
+        elif idList:
+            allPerson = idList
         else:
             allPerson = []
             log.info('人员列表有误，未删除人员，请核验后重试')
-        print(allPerson)
+        # allPerson = idList
         # 基于接口构造请求
         url = "http://%s:%d%s" % (self.server_ip, self.port, PERSON_REMOVE_URL)
-        headers = ACCESS_REMOVE_HEADERS
-        accessData = ACCESS_REMOVE_PARAM
+        headers = PERSON_REMOVE_HEADERS
+        accessData = PERSON_REMOVE_PARAM
         # 调整请求体内容
         accessData["idList"] = allPerson
         body = json.JSONEncoder().encode(accessData)
@@ -183,6 +183,7 @@ class PersonInterfaceManagement(HttpMethod):
         headers["Authorization"] = self.token
         # 发起请求并捕捉响应报文
         response = self.OPENAPI_POST(url, headers, body)
+
         return response
 
 
@@ -351,7 +352,7 @@ class AccessInterfaceManagement(HttpMethod):
     def accessRemove(self, name):
         """
 
-        :param args: 需删除的权限组名称
+        :param idList: 需删除的权限组名称
         :return:
         """
         # 预处理指定授权组信息

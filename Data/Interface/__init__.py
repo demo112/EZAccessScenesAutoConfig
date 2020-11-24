@@ -22,7 +22,7 @@ COMMON_HEADERS = {
     "X-Forwarded-Proto": "http",
     "X-Forwarded-Port": "10008",
     "X-Forwarded-Host": "127.0.0.1:10008",
-    "host": "127.0.0.1:10005",
+    "host": "127.0.0.1:10008",
 }
 
 # token请求头
@@ -42,7 +42,7 @@ TOKEN_HEADERS = {
     "X-Forwarded-Proto": "http",
     "X-Forwarded-Port": "10008",
     "X-Forwarded-Host": "127.0.0.1:10008",
-    "host": "127.0.0.1:10005",
+    "host": "127.0.0.1:10008",
 }
 TOKEN_PARAM = {
     "loginName": "",

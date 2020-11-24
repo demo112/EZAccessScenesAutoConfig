@@ -7,7 +7,8 @@ from zipfile import ZipFile
 
 import xlwt
 
-from Main.OtherTools import *
+from Main.__init__ import *
+from Main.OtherTools.__init__ import *
 
 
 def formatNum(num):
