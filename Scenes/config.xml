@@ -14,6 +14,7 @@
         <MaxDeviceNum>32</MaxDeviceNum>
         <deviceName>示例设备</deviceName>
         <VLAN>206.10.10.0</VLAN>
+        <LONG>24</LONG>
         <Port>80</Port>
         <deviceUsername>admin</deviceUsername>
         <devicePassword>Smbtest00</devicePassword>

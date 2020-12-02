@@ -133,8 +133,8 @@ class MakePhoto:
             if ".zip" in file:
                 fileList.remove(file)
         # 计算每个文件中允许照片数量及压缩包数量
-        motherFileSize = round(os.path.getsize(motherFilePath) / 1024, 2) + 0.2     #单张照片大小
-        eachZipNum = int(zipFileSize * 1024 / motherFileSize)                 #单个包大小
+        motherFileSize = round(os.path.getsize(motherFilePath) / 1024, 2) + 0.2  # 单张照片大小
+        eachZipNum = int(zipFileSize * 1024 / motherFileSize)  # 单个包大小
         zipFileNum = int(len(fileList) / eachZipNum) + 1
         print(motherFileSize)
         print(eachZipNum)
@@ -179,6 +179,5 @@ if __name__ == '__main__':
     # copyFilePath = PHOTOCOPYPATH
     # clon.makePhoto(motherFilePath, copyFilePath)
     # clon.zipPhoto(motherFilePath, copyFilePath)
-    makePersonList()
-    # makePhotoZip()
-    pass
+    # makePersonList()
+    makePhotoZip()

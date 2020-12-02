@@ -32,6 +32,7 @@ USERINFO = {
 DEVICEUSERINFO = {
     "deviceName": main_root.find("DeviceInfo").find("deviceName").text,
     "VLAN": main_root.find("DeviceInfo").find("VLAN").text,
+    "LONG": main_root.find("DeviceInfo").find("LONG").text,
     "MaxDeviceNum": main_root.find("DeviceInfo").find("MaxDeviceNum").text,
     "Port": main_root.find("DeviceInfo").find("Port").text,
     "deviceUsername": main_root.find("DeviceInfo").find("deviceUsername").text,

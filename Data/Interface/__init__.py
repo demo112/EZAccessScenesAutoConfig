@@ -84,6 +84,10 @@ ACCESS_ADD_PARAM = {
     "deviceIdList": []
 }
 
+ACCESS_SEARCH_URL = "/openapi/acs/permission/group/list"
+ACCESS_SEARCH_HEADERS = COMMON_HEADERS
+ACCESS_SEARCH_PARAM = {}
+
 ACCESS_REMOVE_URL = "/openapi/acs/permission/group/delete"
 ACCESS_REMOVE_HEADERS = COMMON_HEADERS
 ACCESS_REMOVE_PARAM = {

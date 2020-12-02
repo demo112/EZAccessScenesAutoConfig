@@ -207,7 +207,7 @@ class DeviceInterfaceManagement(HttpMethod):
         response = self.OPENAPI_POST(url, headers, param)
         return response
 
-    def devicesAdd(self, DNS="206.10.10.0", index=24, Num=DEVICEUSERINFO["MaxDeviceNum"]):
+    def devices_add(self, DNS, index, Num):
         """
 
         :param DNS: 掩码
@@ -215,7 +215,7 @@ class DeviceInterfaceManagement(HttpMethod):
         :param Num: 设备数量
         :return:
         """
-        IpList = IP("%s/%d" % (DNS, index))[2:(int(Num) + 2)]
+        IpList = IP("%s/%d" % (DNS, int(index)))[2:(int(Num) + 2)]
         port = int(DEVICEUSERINFO["Port"])
         deviceUsername = DEVICEUSERINFO["deviceUsername"]
         devicePassword = DEVICEUSERINFO["devicePassword"]
@@ -242,22 +242,22 @@ class DeviceInterfaceManagement(HttpMethod):
 
         response = self.deviceList()
         # 筛选删除范围
-        if ("all" or "All") not in args:
-            deviceList = [self.getResData(response)["deviceList"][i - 1] for i in args]
+        if args:
+            device_list = [self.getResData(response)["deviceList"][i - 1] for i in args]
         else:
-            deviceList = self.getResData(response)["deviceList"]
+            device_list = self.getResData(response)["deviceList"]
 
-        deviceIDList = []
-        for device in deviceList:
-            deviceId = device["deviceId"]
-            deviceIDList.append(deviceId)
+        device_id_list = []
+        for device in device_list:
+            device_id = device["deviceId"]
+            device_id_list.append(device_id)
 
         url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_REMOVE_URL)
         # 获取需删除设备deviceId,构建请求内容，添加需删除设备
         deviceData = DEVICE_REMOVE_PARAM
         headers = DEVICE_REMOVE_HEADERS
 
-        deviceData["deviceIdList"] = deviceIDList
+        deviceData["deviceIdList"] = device_id_list
         body = json.JSONEncoder().encode(deviceData)
 
         headers["Content-Length"] = len(body)
@@ -277,7 +277,7 @@ class DeviceInterfaceManagement(HttpMethod):
             "message": "succeed",
             "data": {
                 "total": 32,
-                "deviceList": [
+                "device_list": [
                     {
                         "deviceName": "示例设备206.10.0.2",
                         "deviceUserName": "admin",
@@ -304,34 +304,34 @@ class DeviceInterfaceManagement(HttpMethod):
 
 
 class AccessInterfaceManagement(HttpMethod):
-    def accessAdd(self, name, personList, deviceList):
+    def access_add(self, name, person_list, device_list):
         """
         创建门禁收授权
         :param name: 授权组名称
-        :param personList: 授权人员的序列编号列表
-        :param deviceList: 授权设备的序列编号列表
+        :param person_list: 授权人员的序列编号列表
+        :param device_list: 授权设备的序列编号列表
         :return:
         """
 
-        def indexToId(tblType, indexLIst):
+        def index_to_id(tbl_type, index_list):
             """
             根据需求获取指定人员、设备的唯一id
-            :param indexLIst:
+            :param index_list:
             :return:
             """
             sql = SqlIO()
             maxNum = int(DEVICEUSERINFO["MaxDeviceNum"])
             # 判断所需列表
-            if "device" == tblType:
-                indexLIst = indexLIst[0:maxNum]
+            if "device" == tbl_type:
+                index_list = index_list[0:maxNum]
                 idList = sql.search("dev_id", "ucs", "tbl_ac_device")
-            elif "person" == tblType:
+            elif "person" == tbl_type:
                 idList = sql.search("person_id", "ucs", "tbl_person")
             else:
                 idList = []
 
             _needList = []
-            for i in indexLIst:
+            for i in index_list:
                 _needList.append(int(idList[i][0]))
             return _needList
 
@@ -340,8 +340,8 @@ class AccessInterfaceManagement(HttpMethod):
         accessData = ACCESS_ADD_PARAM
         accessData["permissionGroupName"] = name
 
-        accessData["personIdList"] = indexToId("person", personList)
-        accessData["deviceIdList"] = indexToId("device", deviceList)
+        accessData["personIdList"] = index_to_id("person", person_list)
+        accessData["deviceIdList"] = index_to_id("device", device_list)
         body = json.JSONEncoder().encode(accessData)
 
         headers["Content-Length"] = len(body)
@@ -352,16 +352,17 @@ class AccessInterfaceManagement(HttpMethod):
     def accessRemove(self, name):
         """
 
-        :param idList: 需删除的权限组名称
+        :param name: 需删除的权限组名称
         :return:
         """
         # 预处理指定授权组信息
         sq = SqlIO()
-        groupId = sq.readInfo("fl_permission_id", "fl_permission_name", name, "ucs", "tbl_acs_permission")
+        group_id = sq.readInfo("fl_permission_id", "fl_permission_name", name, "ucs", "tbl_acs_permission")
         url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_REMOVE_URL)
         headers = ACCESS_REMOVE_HEADERS
         accessData = ACCESS_REMOVE_PARAM
-        accessData["permissionGroupId"] = groupId[0][0]
+        print(accessData)
+        accessData["permissionGroupId"] = group_id[0][0]
         body = json.JSONEncoder().encode(accessData)
 
         headers["Content-Length"] = len(body)
@@ -373,10 +374,20 @@ class AccessInterfaceManagement(HttpMethod):
         pass
 
     def accessSearch(self):
-        pass
+        sq = SqlIO()
+        groupId = sq.search("fl_permission_name", "ucs", "tbl_acs_permission")
+        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_SEARCH_URL)
+        headers = ACCESS_SEARCH_HEADERS
+        accessData = ACCESS_SEARCH_PARAM
+        body = json.JSONEncoder().encode(accessData)
+
+        headers["Content-Length"] = len(body)
+        headers["Authorization"] = self.token
+        response = self.OPENAPI_POST(url, headers, body)
+        return response
 
 
-class AttendanceInterfaceMangement(HttpMethod):
+class AttendanceInterfaceManagement(HttpMethod):
     def attendanceAdd(self):
         pass
 
@@ -390,20 +401,20 @@ class AttendanceInterfaceMangement(HttpMethod):
         pass
 
 
-class RegulationInterFaceMgt(AttendanceInterfaceMangement):
-    def RegulationUpdate(self):
+class RegulationInterFaceMgt(AttendanceInterfaceManagement):
+    def regulation_update(self):
         pass
 
 
-class StaffScheduleInterFaceMgt(AttendanceInterfaceMangement):
+class StaffScheduleInterFaceMgt(AttendanceInterfaceManagement):
     pass
 
 
-class AttendanceMgtInterFaceMgt(AttendanceInterfaceMangement):
+class AttendanceMgtInterFaceMgt(AttendanceInterfaceManagement):
     pass
 
 
-class AttendanceStaticInterFaceMgt(AttendanceInterfaceMangement):
+class AttendanceStaticInterFaceMgt(AttendanceInterfaceManagement):
     pass
 
 
@@ -416,12 +427,4 @@ class SystemConfigurationManagement(HttpMethod):
 
 
 if __name__ == '__main__':
-    am = AccessInterfaceManagement()
-    # a = am.accessAdd("123", [2], range(100))
-    # print(a)
-    a1 = am.accessRemove('123')
-    print(a1)
-    dim = DeviceInterfaceManagement()
-    ab = dim.deviceRemove("all")
-    print(ab)
-    dim.devicesAdd(DNS="206.10.10.0")
+    pass
