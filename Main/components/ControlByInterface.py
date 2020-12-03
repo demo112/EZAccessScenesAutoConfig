@@ -6,7 +6,6 @@ def do_batch_remove_person():
     pim = PersonInterfaceManagement()
     res = pim.personRemove("all")
     res = pim.getResData(res)
-    print(res)
 
 
 def do_batch_add_device(DNS, index, Num):

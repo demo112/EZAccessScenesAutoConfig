@@ -544,7 +544,7 @@ class PersonManagement:
                 print(flag)
                 if flag:
                     flag = False
-                    print(time.localtime())
+                    print(flag)
                 else:
                     break
             except:
@@ -567,8 +567,10 @@ class PersonManagement:
         try:
             flag = uiautomation.ButtonControl(name=name, Depth=Depth, foundIndex=foundIndex)
             flag.Click()
+            return True
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
+            return False
 
     def batchImportChoose(self, fileName=None, name="", Depth=None, foundIndex=None, winChooseID=""):
         """
@@ -587,8 +589,10 @@ class PersonManagement:
             file = uiautomation.EditControl(AutomationId=winChooseID)
             # a = "C:\\Users\\user\\PycharmProjects\\Tools\\EZAccessScenesAutoConfig\\Data\\Person\\Info\\cn002.xls"
             co.give_value(file, fileName)
+            return True
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
+            return False
 
     def batchImportClose(self, name="", Depth=None, foundIndex=None):
         """
@@ -602,7 +606,7 @@ class PersonManagement:
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
 
-    def batchImportConfirm(self, AutomationId="btn_confirm"):
+    def batch_import_confirm(self, AutomationId="btn_confirm"):
         """
         确认批量导入
         :param targetId:
@@ -611,8 +615,10 @@ class PersonManagement:
         try:
             flag = uiautomation.ButtonControl(AutomationId=AutomationId)
             flag.Click()
+            return True
         except Exception as e:
             log.debug("Can not control EZAccess, because: %s" % e)
+            return False
 
 
 class AccessControl:
