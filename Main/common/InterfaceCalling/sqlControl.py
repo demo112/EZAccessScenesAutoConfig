@@ -47,11 +47,12 @@ class SqlIO(object):
 
     def readInfo(self, targetRow, infoRow, info, db_wm, db_nm):
         db, cursor = self.link(db_wm)
-        query = "SELECT {} FROM {} WHERE {} LIKE {}".format(targetRow, db_nm, infoRow, info)
+        query = "SELECT {} FROM {} WHERE {} LIKE '{}'".format(targetRow, db_nm, infoRow, info)
         cursor.execute(query)
         db.commit()
         data = cursor.fetchall()
         return data
+
 
 if __name__ == '__main__':
     sqlio = SqlIO()

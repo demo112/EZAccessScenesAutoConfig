@@ -329,8 +329,8 @@ class AccessInterfaceManagement(HttpMethod):
                 idList = sql.search("person_id", "ucs", "tbl_person")
             else:
                 idList = []
-
             _needList = []
+
             for i in index_list:
                 _needList.append(int(idList[i][0]))
             return _needList
@@ -349,7 +349,7 @@ class AccessInterfaceManagement(HttpMethod):
         response = self.OPENAPI_POST(url, headers, body)
         return response
 
-    def accessRemove(self, name):
+    def access_remove(self, name):
         """
 
         :param name: 需删除的权限组名称
@@ -358,10 +358,10 @@ class AccessInterfaceManagement(HttpMethod):
         # 预处理指定授权组信息
         sq = SqlIO()
         group_id = sq.readInfo("fl_permission_id", "fl_permission_name", name, "ucs", "tbl_acs_permission")
+        print(group_id)
         url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_REMOVE_URL)
         headers = ACCESS_REMOVE_HEADERS
         accessData = ACCESS_REMOVE_PARAM
-        print(accessData)
         accessData["permissionGroupId"] = group_id[0][0]
         body = json.JSONEncoder().encode(accessData)
 

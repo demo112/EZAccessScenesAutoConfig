@@ -37,5 +37,5 @@ class PersonMgtInk(HttpMethod):
 
 if __name__ == '__main__':
     pmi = PersonMgtInk()
-    # pmi.do_batch_remove_person_by_dp(4096)
-    pmi.do_batch_remove_person_all()
+    pmi.do_batch_remove_person_by_dp(4097)
+    # pmi.do_batch_remove_person_all()

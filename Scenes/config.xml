@@ -45,11 +45,12 @@
     </PersonPicture>
     <!--授权配置-->
     <Access>
-        <DeviceRange>(1,32)</DeviceRange>
-        <personRange>(1,5000)</personRange>
+        <name>示例授权组</name>
+        <deviceRange>(0,1)</deviceRange>
+        <personRange>(0,1)</personRange>
     </Access>
     <!--考勤配置-->
-    <Access>
+    <Attandance>
         null
-    </Access>
+    </Attandance>
 </config>

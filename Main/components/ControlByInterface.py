@@ -25,8 +25,12 @@ def do_batch_remove_device(*args):
             log.warning(msg)
 
 
-def do_add_access(name, person_list, device_list):
+def do_add_access(name, person_set, device_set):
     aim = AccessInterfaceManagement()
+    name = str(name)
+    # person_list = range(person_set[1], person_set[3]+1)
+    person_list = range(int(person_set[1]), int(person_set[3])+1)
+    device_list = range(int(device_set[1]), int(device_set[3])+1)
     aim.access_add(name, person_list, device_list)
 
 
@@ -37,13 +41,13 @@ def do_batch_remove_access(name=None):
     else:
         res = aim.accessSearch()
         name_list = aim.getResData(res)
-    for name in name_list:
-        res = aim.accessRemove(name["permissionGroupName"])
+    for _name in name_list:
+        res = aim.access_remove(_name["permissionGroupName"])
         code = aim.getStatusCode(res)
         if code == 200:
             pass
         else:
-            log.error("{}没有正确删除，请处理异常".format(name))
+            log.error("{}没有正确删除，请处理异常".format(_name))
 
 
 if __name__ == '__main__':
