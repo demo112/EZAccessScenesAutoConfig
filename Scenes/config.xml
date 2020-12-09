@@ -1,10 +1,10 @@
 <config>
     <name>XXXXX配置场景</name>
     <!--如果原配置信息不是默认，是否覆盖-->
-    <ifrestore>True</ifrestore>
+    <ifrestore>False</ifrestore>
     <!--完成后是否保存配置资源-->
     <ifSaveSource>True</ifSaveSource>
-    <checkLanguage>cn</checkLanguage>
+    <checkLanguage>en</checkLanguage>
     <UserInfo>
         <username>admin</username>
         <password>Smbtest00</password>

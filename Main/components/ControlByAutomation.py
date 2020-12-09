@@ -25,6 +25,7 @@ def do_batch_import_person(filename=None):
         sq = SqlIO()
         dept_list = sq.search("dept_id", "ucs", 'tbl_dept')[1:]
         while True:
+            time.sleep(1)
             dp = str(dept_list[index][0])
             flag = pm.chooseDepartment(targetId=dp)
             #     构造文件路径
