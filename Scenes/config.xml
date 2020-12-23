@@ -4,7 +4,7 @@
     <ifrestore>False</ifrestore>
     <!--完成后是否保存配置资源-->
     <ifSaveSource>True</ifSaveSource>
-    <checkLanguage>en</checkLanguage>
+    <checkLanguage>cn</checkLanguage>
     <UserInfo>
         <username>admin</username>
         <password>Smbtest00</password>
@@ -17,7 +17,8 @@
         <LONG>24</LONG>
         <Port>80</Port>
         <deviceUsername>admin</deviceUsername>
-        <devicePassword>Smbtest00</devicePassword>
+<!--        此处为Smbtest00密文-->
+        <devicePassword>Dbckl4A3AsqW/e1zslLUSg==</devicePassword>
     </DeviceInfo>
     <DepartmentInfo>
         <name>我的公司名字叫12345678ABCDEF</name>

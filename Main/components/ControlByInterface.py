@@ -28,8 +28,8 @@ def do_add_access(name, person_set, device_set):
     aim = AccessInterfaceManagement()
     name = str(name)
     # person_list = range(person_set[1], person_set[3]+1)
-    person_list = range(int(person_set[1]), int(person_set[3])+1)
-    device_list = range(int(device_set[1]), int(device_set[3])+1)
+    person_list = range(int(person_set[1]), int(person_set[3]))
+    device_list = range(int(device_set[1]), int(device_set[3]))
     aim.access_add(name, person_list, device_list)
 
 

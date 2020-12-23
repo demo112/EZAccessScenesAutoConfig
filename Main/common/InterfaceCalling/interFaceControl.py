@@ -411,7 +411,35 @@ class StaffScheduleInterFaceMgt(AttendanceInterfaceManagement):
 
 
 class AttendanceMgtInterFaceMgt(AttendanceInterfaceManagement):
-    pass
+    def leave_add(self, person_id, start_time, end_time):
+        # """
+        #
+        # :param args: 输入设备列表序列指定删除设备，输入“all”删除所有
+        # :return:
+        # """
+        # # 对设备列表数据进行预处理
+        #
+        #
+        # # 筛选删除范围
+        # person_info = {}
+        #
+        # url = "http://%s:%d%s" % (self.server_ip, self.port, LEAVE_ADD_URL)
+        # # 获取需删除设备deviceId,构建请求内容，添加需删除设备
+        # leave_data = person_info
+        # leave_data = LEAVE_ADD_PARAM
+        # headers = DEVICE_REMOVE_HEADERS
+        #
+        # deviceData["deviceIdList"] = device_id_list
+        # body = json.JSONEncoder().encode(deviceData)
+        #
+        # headers["Content-Length"] = len(body)
+        # headers["Authorization"] = self.token
+        # response = self.OPENAPI_POST(url, headers, body)
+        # return response
+        pass
+
+    def batch_leave_add(self, person_list):
+        pass
 
 
 class AttendanceStaticInterFaceMgt(AttendanceInterfaceManagement):

@@ -3,7 +3,7 @@ from Main.components.ControlByInterface import *
 from Main.components.ControlByAutomation import *
 
 # 判断是否要初始化
-if IFRESTORE:
+if IFRESTORE == "True":
     do_batch_remove_access()
     do_batch_remove_person()
     do_batch_remove_device()

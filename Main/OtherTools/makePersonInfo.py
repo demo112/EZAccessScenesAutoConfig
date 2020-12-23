@@ -169,15 +169,5 @@ def makePhotoZip():
 
 
 if __name__ == '__main__':
-    # pl = PersonList()
-    # title = title_cn
-    # all_person = pl.makePerson()
-    # pl.writePersonList(all_person)
-    #
-    # clon = MakePhoto()
-    # motherFilePath = MOTHERFILEPATH + "\\" + os.listdir(MOTHERFILEPATH)[0]
-    # copyFilePath = PHOTOCOPYPATH
-    # clon.makePhoto(motherFilePath, copyFilePath)
-    # clon.zipPhoto(motherFilePath, copyFilePath)
-    # makePersonList()
-    makePhotoZip()
+    makePersonList()
+    # makePhotoZip()

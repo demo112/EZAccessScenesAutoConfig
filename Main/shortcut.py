@@ -68,10 +68,36 @@ class FakePostMan(HttpMethod):
 
 if __name__ == '__main__':
     fp = FakePostMan()
-    url = "/openapi/atnd/attendance/schedule/delete"
+    # 批量补签
+    url = "/openapi/atnd/attendance/supplement/add"
     token = True
-    params = {"idList":[1]}
-    res_True = fp.do_try_url(url, token, params)
-    res_False = fp.do_try_url(url, False, params)
-    print("res_True:", res_True)
-    print("res_False:", res_False)
+    for p in range(1, 500):
+        params = {
+            "seqId": p,
+            "personId": p + 4500,
+            "signInTime": "2020/12/14 09:00",
+            # "signOutTime": "2020/12/14 18:00",
+        }
+        res_True = fp.do_try_url(url, token, params)
+        # res_False = fp.do_try_url(url, False, params)
+        print("res_True:", res_True)
+        # print("res_False:", res_False)
+    # # 批量请假
+    #
+    # url = "/openapi/atnd/attendance/leave/add"
+    # token = True
+    # for p in range(300, 501):
+    #     params = {"duration":900,
+    #               "endTime":"2020/12/14 18:00",
+    #               "personName":"jys0010000000%dABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv" % p,
+    #               "primitive":"0",
+    #               "remark":"",
+    #               "startTime":"2020/12/14 09:00",
+    #               "subtype":"0",
+    #               "departName":"新节点1",
+    #               "personCode":"jys0010000000%d" % p,
+    #               "personId":4500+ p}
+    #     res_True = fp.do_try_url(url, token, params)
+    #     # res_False = fp.do_try_url(url, False, params)
+    #     print("res_True:", res_True)
+        # print("res_False:", res_False)

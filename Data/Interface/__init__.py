@@ -49,11 +49,10 @@ TOKEN_PARAM = {
     "password": "",
 }
 
-
 PERSON_REMOVE_URL = "/openapi/person/delete"
 PERSON_REMOVE_HEADERS = COMMON_HEADERS
 PERSON_REMOVE_PARAM = {
-    "idList":[]
+    "idList": []
 }
 
 DEVICE_ADD_URL = "/openapi/device/ac/add"
@@ -103,6 +102,21 @@ REGULATION_UPDATE_PARAM = {
     "beforeWorkEndMinute": 0,
     "unSignInTag": 0,
     "unSignOutTag": 0
+}
+
+LEAVE_ADD_URL = "/openapi/atnd/attendance/leave/add"
+LEAVE_ADD_HEADERS = COMMON_HEADERS
+LEAVE_ADD_PARAM = {
+    "duration":900,
+    "endTime":"2020/12/12 18:00",
+    "personName":"jys0030000000001ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv",
+    "primitive":"0",
+    "remark":"",
+    "startTime":"2020/12/12 09:00",
+    "subtype":"0",
+    "departName":".........1",
+    "personCode":"jys0030000000001",
+    "personId":1
 }
 
 if __name__ == '__main__':

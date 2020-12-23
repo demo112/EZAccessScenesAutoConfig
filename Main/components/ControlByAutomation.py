@@ -18,7 +18,7 @@ def do_batch_import_person(filename=None):
         person_list = [filename]
     else:
         person_list = os.listdir(PERSONINFO)
-
+    # todo 增加人员信息源文件判断及生成功能
     pm = PersonManagement()
     for index in range(0, len(person_list)):
         #     定位部门
@@ -39,7 +39,8 @@ def do_batch_import_person(filename=None):
                 break
             else:
                 pass
-
+        #     todo 增加人员导入结果确认功能
+        # """通过校验导入前后的人员数量确认”“”
         # pm.checkProgress(name="人员名单.xls", Depth=17, foundIndex=1)
 
 
