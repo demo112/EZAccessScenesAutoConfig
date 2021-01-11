@@ -3,7 +3,7 @@
     <!--如果原配置信息不是默认，是否覆盖-->
     <ifrestore>False</ifrestore>
     <!--完成后是否保存配置资源-->
-    <ifSaveSource>True</ifSaveSource>
+    <ifSaveSource>False</ifSaveSource>
     <checkLanguage>cn</checkLanguage>
     <UserInfo>
         <username>admin</username>
@@ -27,8 +27,8 @@
     </DepartmentInfo>
     <!--人员信息格式模板-->
     <PersonInfo>
-        <PersonID>jys%s0000000%s</PersonID>
-        <Name>jys%s0000000%sABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv</Name>
+        <PersonID>jys%s000000%s</PersonID>
+        <Name>jys%s000000%sABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv</Name>
         <GenderRangeMin>0</GenderRangeMin>
         <GenderRangeMax>2</GenderRangeMax>
         <IDNo>jys%s00IDNO00000%s</IDNo>
@@ -37,7 +37,8 @@
         <PhoneRangeMin>11100000000</PhoneRangeMin>
         <PhoneRangeMax>19000000000</PhoneRangeMax>
         <Department>null</Department>
-        <Address>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^]*()-_</Address>
+        <Address>ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxyz!@#$%^]*()-_</Address>
+        <Remark>ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxyz!@#$%^]*()-_</Remark>
         <PhotoNum>6</PhotoNum>
     </PersonInfo>
     <!--人员照片-->

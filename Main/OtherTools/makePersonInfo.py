@@ -65,6 +65,7 @@ class PersonList():
                 _person_info.append(DateOfBirth % (t.tm_year, t.tm_mon, t.tm_mday))
                 _person_info.append(random.randint(PhoneRangeMin, PhoneRangeMax))
                 _person_info.append(Address)
+                _person_info.append(Remark)
 
                 dp_person.append(_person_info)
             all_person["dp:" + dp] = dp_person
