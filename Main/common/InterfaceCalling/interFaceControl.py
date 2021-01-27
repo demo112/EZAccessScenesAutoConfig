@@ -134,7 +134,7 @@ class HttpsMethod(object):
     def OPENAPI_POST(self, url, headers, param):
         response = b""
         try:
-            response = self.getResponse(url, headers, param).decode('UTF-8')
+            response = self.getResponse(url, headers, param)
         except Exception as e:
             self.httpClient.close()
             self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接

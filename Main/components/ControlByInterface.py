@@ -39,9 +39,7 @@ def do_batch_remove_access(name=None):
         name_list = [name, ]
     else:
         res = aim.accessSearch()
-        print(res)
         name_list = aim.getResData(res)
-        print(name_list)
     for _name in name_list:
         res = aim.access_remove(_name["permissionGroupName"])
         code = aim.getStatusCode(res)
