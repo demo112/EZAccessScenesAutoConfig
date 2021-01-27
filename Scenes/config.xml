@@ -1,7 +1,7 @@
 <config>
     <name>XXXXX配置场景</name>
     <!--如果原配置信息不是默认，是否覆盖-->
-    <ifrestore>False</ifrestore>
+    <ifrestore>True</ifrestore>
     <!--完成后是否保存配置资源-->
     <ifSaveSource>False</ifSaveSource>
     <checkLanguage>cn</checkLanguage>

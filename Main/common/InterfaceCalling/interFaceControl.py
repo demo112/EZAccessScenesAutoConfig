@@ -5,6 +5,7 @@ import http.client
 
 # 解决python中无法处理null问题，将返回值中的null强制转化为空字符，''
 import requests
+import urllib3
 
 from Data.Interface.__init__ import *
 from Main.common.InterfaceCalling.sqlControl import SqlIO
@@ -22,7 +23,7 @@ class StrToAes:
         pass
 
 
-class HttpMethod(object):
+class HttpsMethod(object):
     def __init__(self, username=USERINFO["username"], password=USERINFO["password"], port=10008):
         self.server_ip = '127.0.0.1'
         self.port = 10008
@@ -32,25 +33,6 @@ class HttpMethod(object):
         self.httpClient = http.client.HTTPConnection(self.server_ip, port, timeout=60)
         # 获取鉴权token值
         self.token = self.getAccessToken()
-
-    def __Template__(self):
-
-        # 预处信息
-        sq = SqlIO()
-
-        # 基于接口构造请求
-        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_REMOVE_URL)
-        headers = ACCESS_REMOVE_HEADERS
-        accessData = ACCESS_REMOVE_PARAM
-        # 调整请求体内容
-        accessData["permissionGroupId"] = [0][0]
-        body = json.JSONEncoder().encode(accessData)
-        # 调整请求头内容
-        headers["Content-Length"] = len(body)
-        headers["Authorization"] = self.token
-        # 发起请求并捕捉响应报文
-        response = self.OPENAPI_POST(url, headers, body)
-        return response
 
     def getAccessToken(self):
         """
@@ -64,21 +46,16 @@ class HttpMethod(object):
             TOKEN_PARAM["password"] = sql.readPassword()
             param = json.JSONEncoder().encode(TOKEN_PARAM)
 
-            TOKEN_HEADERS["Content-Length"] = len(param)
+            TOKEN_HEADERS["Content-Length"] = str(len(param))
             headers = TOKEN_HEADERS
-            # self.httpClient.request('POST', url, body=param, headers=headers)
-            requests.post(url, data=param, headers=headers, verify=False)
-        except IndexError:
-            print("未注册用户，请注册")
-        try:
-            time.sleep(1)
-            response = self.httpClient.getresponse().read()
+            urllib3.disable_warnings()
+            response = self.getResponse(url, data=param, headers=headers)
             res = self.getStatusCode(response)
             if res == 200:
                 resdata = self.getResData(response)
                 accessToken = resdata["accessToken"]
         except Exception as e:
-            print(e)
+            print("gettoken:", e)
             self.httpClient.close()
             self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=60)  # 重新建立链接
             # raise http.client.HTTPConnection.BadStatusLine('Badstatusline')
@@ -89,6 +66,17 @@ class HttpMethod(object):
         m.update(str)
         return m.hexdigest()
 
+    def getResponse(self, url, headers, data):
+        """
+        直接获取响应体对象
+        :param url:
+        :param data:
+        :param headers:
+        :return:响应的内容
+        """
+        response = requests.post(url, headers=headers, data=data, verify=False).content
+        return response
+
     def getStatusCode(self, res):
         """
         获取Response中的StatusCode
@@ -97,12 +85,14 @@ class HttpMethod(object):
             # python3和Python2在套接字返回值解码上有区别
             # decode():bytes变为str
             # encode():str变为decode
-            res = res.decode()
+            res = res.decode("utf-8")
             res = res.replace('false', 'False')
             res = res.replace('true', 'True')
-            res_dict = eval(res)
-            return res_dict["code"]
+            res = eval(res)
+            # print(res_dict)
+            return res["code"]
         except NameError as e:
+            print("getStatusCode:", e)
             return 1
 
     def getResData(self, res):
@@ -113,16 +103,18 @@ class HttpMethod(object):
             res = res.decode()
             res = res.replace('false', 'False')
             res = res.replace('true', 'True')
-            res_dict = eval(res)
-            return res_dict["data"]
+            res = eval(res)
+            data = res["data"]
+            return data
         except Exception as e:
+            print("getResData:", e)
             return 1
 
     def UAPI_POST(self, url, param):
         body = json.JSONEncoder().encode(param)
         response = b""
         headers = {"Connection": "keep-alive",
-                   "Content-Length": len(body),
+                   "Content-Length": str(len(body)),
                    "Cache-Control": "no-cache",
                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.100 Safari/537.36",
                    "Authorization": self.token,
@@ -131,11 +123,8 @@ class HttpMethod(object):
                    "Accept-Encoding": "gzip, deflate",
                    "Accept-Language": "zh-CN,zh;q=0.9"
                    }
-
         try:
-            self.httpClient.request('POST', url, body=body, headers=headers)
-            time.sleep(1)
-            response = self.httpClient.getresponse().read()
+            response = self.getResponse(url,  headers, body)
         except Exception as e:
             self.httpClient.close()
             self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
@@ -145,9 +134,7 @@ class HttpMethod(object):
     def OPENAPI_POST(self, url, headers, param):
         response = b""
         try:
-            self.httpClient.request("POST", url, body=param, headers=headers)
-            time.sleep(1)
-            response = self.httpClient.getresponse().read()
+            response = self.getResponse(url, headers, param).decode('UTF-8')
         except Exception as e:
             self.httpClient.close()
             self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
@@ -155,7 +142,7 @@ class HttpMethod(object):
         return response
 
 
-class PersonInterfaceManagement(HttpMethod):
+class PersonInterfaceManagement(HttpsMethod):
     def personRemove(self, idList=None):
         """
         默认删除所有人，或指定删除某一部分人
@@ -175,14 +162,14 @@ class PersonInterfaceManagement(HttpMethod):
             log.info('人员列表有误，未删除人员，请核验后重试')
         # allPerson = idList
         # 基于接口构造请求
-        url = "http://%s:%d%s" % (self.server_ip, self.port, PERSON_REMOVE_URL)
+        url = "https://%s:%d%s" % (self.server_ip, self.port, PERSON_REMOVE_URL)
         headers = PERSON_REMOVE_HEADERS
         accessData = PERSON_REMOVE_PARAM
         # 调整请求体内容
         accessData["idList"] = allPerson
         body = json.JSONEncoder().encode(accessData)
         # 调整请求头内容
-        headers["Content-Length"] = len(body)
+        headers["Content-Length"] = str(len(body))
         headers["Authorization"] = self.token
         # 发起请求并捕捉响应报文
         response = self.OPENAPI_POST(url, headers, body)
@@ -190,10 +177,10 @@ class PersonInterfaceManagement(HttpMethod):
         return response
 
 
-class DeviceInterfaceManagement(HttpMethod):
+class DeviceInterfaceManagement(HttpsMethod):
 
     def deviceAdd(self, name, ip, port, deviceUsername, devicePassword):
-        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_ADD_URL)
+        url = "https://%s:%d%s" % (self.server_ip, self.port, DEVICE_ADD_URL)
         deviceData = DEVICE_ADD_PARAM
         headers = DEVICE_ADD_HEADERS
 
@@ -255,7 +242,7 @@ class DeviceInterfaceManagement(HttpMethod):
             device_id = device["deviceId"]
             device_id_list.append(device_id)
 
-        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_REMOVE_URL)
+        url = "https://%s:%d%s" % (self.server_ip, self.port, DEVICE_REMOVE_URL)
         # 获取需删除设备deviceId,构建请求内容，添加需删除设备
         deviceData = DEVICE_REMOVE_PARAM
         headers = DEVICE_REMOVE_HEADERS
@@ -263,7 +250,7 @@ class DeviceInterfaceManagement(HttpMethod):
         deviceData["deviceIdList"] = device_id_list
         body = json.JSONEncoder().encode(deviceData)
 
-        headers["Content-Length"] = len(body)
+        headers["Content-Length"] = str(len(body))
         headers["Authorization"] = self.token
         response = self.OPENAPI_POST(url, headers, body)
         return response
@@ -294,19 +281,19 @@ class DeviceInterfaceManagement(HttpMethod):
                         "deviceType": 0
                     },]}}
         """
-        url = "http://%s:%d%s" % (self.server_ip, self.port, DEVICE_SEARCH_URL)
+        url = "https://%s:%d%s" % (self.server_ip, self.port, DEVICE_SEARCH_URL)
         # 获取需删除设备deviceId,构建请求内容，添加需删除设备
         headers = DEVICE_REMOVE_HEADERS
         deviceData = DEVICE_REMOVE_PARAM
         body = json.JSONEncoder().encode(deviceData)
 
-        headers["Content-Length"] = len(body)
+        headers["Content-Length"] = str(len(body))
         headers["Authorization"] = self.token
         response = self.OPENAPI_POST(url, headers, body)
         return response
 
 
-class AccessInterfaceManagement(HttpMethod):
+class AccessInterfaceManagement(HttpsMethod):
     def access_add(self, name, person_list, device_list):
         """
         创建门禁收授权
@@ -338,7 +325,7 @@ class AccessInterfaceManagement(HttpMethod):
                 _needList.append(int(idList[i][0]))
             return _needList
 
-        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_ADD_URL)
+        url = "https://%s:%d%s" % (self.server_ip, self.port, ACCESS_ADD_URL)
         headers = ACCESS_ADD_HEADERS
         accessData = ACCESS_ADD_PARAM
         accessData["permissionGroupName"] = name
@@ -347,7 +334,7 @@ class AccessInterfaceManagement(HttpMethod):
         accessData["deviceIdList"] = index_to_id("device", device_list)
         body = json.JSONEncoder().encode(accessData)
 
-        headers["Content-Length"] = len(body)
+        headers["Content-Length"] = str(len(body))
         headers["Authorization"] = self.token
         response = self.OPENAPI_POST(url, headers, body)
         return response
@@ -361,14 +348,13 @@ class AccessInterfaceManagement(HttpMethod):
         # 预处理指定授权组信息
         sq = SqlIO()
         group_id = sq.readInfo("fl_permission_id", "fl_permission_name", name, "ucs", "tbl_acs_permission")
-        print(group_id)
-        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_REMOVE_URL)
+        url = "https://%s:%d%s" % (self.server_ip, self.port, ACCESS_REMOVE_URL)
         headers = ACCESS_REMOVE_HEADERS
         accessData = ACCESS_REMOVE_PARAM
         accessData["permissionGroupId"] = group_id[0][0]
         body = json.JSONEncoder().encode(accessData)
 
-        headers["Content-Length"] = len(body)
+        headers["Content-Length"] = str(len(body))
         headers["Authorization"] = self.token
         response = self.OPENAPI_POST(url, headers, body)
         return response
@@ -379,18 +365,18 @@ class AccessInterfaceManagement(HttpMethod):
     def accessSearch(self):
         sq = SqlIO()
         groupId = sq.search("fl_permission_name", "ucs", "tbl_acs_permission")
-        url = "http://%s:%d%s" % (self.server_ip, self.port, ACCESS_SEARCH_URL)
+        url = "https://%s:%d%s" % (self.server_ip, self.port, ACCESS_SEARCH_URL)
         headers = ACCESS_SEARCH_HEADERS
         accessData = ACCESS_SEARCH_PARAM
         body = json.JSONEncoder().encode(accessData)
 
-        headers["Content-Length"] = len(body)
+        headers["Content-Length"] = str(len(body))
         headers["Authorization"] = self.token
         response = self.OPENAPI_POST(url, headers, body)
         return response
 
 
-class AttendanceInterfaceManagement(HttpMethod):
+class AttendanceInterfaceManagement(HttpsMethod):
     def attendanceAdd(self):
         pass
 
@@ -426,7 +412,7 @@ class AttendanceMgtInterFaceMgt(AttendanceInterfaceManagement):
         # # 筛选删除范围
         # person_info = {}
         #
-        # url = "http://%s:%d%s" % (self.server_ip, self.port, LEAVE_ADD_URL)
+        # url = "https://%s:%d%s" % (self.server_ip, self.port, LEAVE_ADD_URL)
         # # 获取需删除设备deviceId,构建请求内容，添加需删除设备
         # leave_data = person_info
         # leave_data = LEAVE_ADD_PARAM
@@ -435,7 +421,7 @@ class AttendanceMgtInterFaceMgt(AttendanceInterfaceManagement):
         # deviceData["deviceIdList"] = device_id_list
         # body = json.JSONEncoder().encode(deviceData)
         #
-        # headers["Content-Length"] = len(body)
+        # headers["Content-Length"] = str(len(body))
         # headers["Authorization"] = self.token
         # response = self.OPENAPI_POST(url, headers, body)
         # return response
@@ -449,14 +435,22 @@ class AttendanceStaticInterFaceMgt(AttendanceInterfaceManagement):
     pass
 
 
-class PassThuInterfaceManagement(HttpMethod):
+class PassThuInterfaceManagement(HttpsMethod):
     pass
 
 
-class SystemConfigurationManagement(HttpMethod):
+class SystemConfigurationManagement(HttpsMethod):
     pass
 
 
 if __name__ == '__main__':
-    h = HttpMethod()
-    h.getAccessToken()
+    # dim = DeviceInterfaceManagement()
+    # list = dim.deviceList()
+    # print(list)
+    # aim = AccessInterfaceManagement()
+    # a_l = aim.accessSearch()
+    # print(a_l)
+    # h = HttpsMethod()
+    # t = h.getAccessToken()
+    # print(t)
+    pass

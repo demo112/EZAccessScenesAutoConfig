@@ -5,7 +5,7 @@ from Main.components.ControlByInterface import *
 from Main.components.ControlByAutomation import *
 
 
-class PersonMgtInk(HttpMethod):
+class PersonMgtInk(HttpsMethod):
     def __init__(self):
         super().__init__()
         self.sql = SqlIO()
@@ -35,7 +35,7 @@ class PersonMgtInk(HttpMethod):
                 pass
 
 
-class FakePostMan(HttpMethod):
+class FakePostMan(HttpsMethod):
     def do_try_url(self, url_, token_or_not_, params_):
         url_ = "http://%s:%d%s" % (self.server_ip, self.port, url_)
         header = {

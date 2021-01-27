@@ -29,7 +29,7 @@ COMMON_HEADERS = {
 TOKEN_URL = "/openapi/user/account/token/get"
 TOKEN_HEADERS = {
     "Connection": "keep-alive",
-    "Content-Length": 0,
+    "Content-Length": "0",
     "Cache-Control": "no-cache",
     "User-Agent": "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36",
     "Content-Type": "application/json;charset=UTF-8",

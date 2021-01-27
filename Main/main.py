@@ -3,10 +3,10 @@ from Main.components.ControlByInterface import *
 from Main.components.ControlByAutomation import *
 
 # 判断是否要初始化
-# if IFRESTORE == "True":
-#     do_batch_remove_access()
-#     do_batch_remove_person()
-#     do_batch_remove_device()
+if IFRESTORE == "True":
+    do_batch_remove_access()
+    do_batch_remove_person()
+    do_batch_remove_device()
 # #
 do_batch_add_device(DNS=DEVICEUSERINFO["VLAN"], index=DEVICEUSERINFO["LONG"], Num=DEVICEUSERINFO["MaxDeviceNum"])
 # print("即将进行人员信息配置，请切换至EZAccess客户端。导入前请不要操作鼠标")
