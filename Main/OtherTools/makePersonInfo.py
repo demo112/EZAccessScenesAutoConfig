@@ -170,5 +170,5 @@ def makePhotoZip():
 
 
 if __name__ == '__main__':
-    makePersonList()
-    # makePhotoZip()
+    # makePersonList()
+    makePhotoZip()

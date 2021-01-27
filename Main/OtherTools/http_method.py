@@ -137,7 +137,6 @@ if __name__ == '__main__':
     ret1 = h.getStatusCode(res1)
     resData1 = h.getResData(res1)
 
-
     # print(h)
     # print(url_)
     # print(param)

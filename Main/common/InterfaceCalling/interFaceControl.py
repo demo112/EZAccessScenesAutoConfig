@@ -4,6 +4,8 @@ import hashlib
 import http.client
 
 # 解决python中无法处理null问题，将返回值中的null强制转化为空字符，''
+import requests
+
 from Data.Interface.__init__ import *
 from Main.common.InterfaceCalling.sqlControl import SqlIO
 from IPy import IP
@@ -54,7 +56,7 @@ class HttpMethod(object):
         """
         获取鉴权Token值
         """
-        url = "http://%s:%d%s" % (self.server_ip, self.port, TOKEN_URL)
+        url = "https://%s:%d%s" % (self.server_ip, self.port, TOKEN_URL)
         accessToken = ""
         # 读取数据库中密码密文
         try:
@@ -64,7 +66,8 @@ class HttpMethod(object):
 
             TOKEN_HEADERS["Content-Length"] = len(param)
             headers = TOKEN_HEADERS
-            self.httpClient.request('POST', url, body=param, headers=headers)
+            # self.httpClient.request('POST', url, body=param, headers=headers)
+            requests.post(url, data=param, headers=headers, verify=False)
         except IndexError:
             print("未注册用户，请注册")
         try:
@@ -455,4 +458,5 @@ class SystemConfigurationManagement(HttpMethod):
 
 
 if __name__ == '__main__':
-    pass
+    h = HttpMethod()
+    h.getAccessToken()

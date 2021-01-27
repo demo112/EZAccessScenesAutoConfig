@@ -48,8 +48,8 @@
     <!--授权配置-->
     <Access>
         <name>示例授权组</name>
-        <deviceRange>(0,1)</deviceRange>
-        <personRange>(0,1)</personRange>
+        <deviceRange>(0,2)</deviceRange>
+        <personRange>(0,5000)</personRange>
     </Access>
     <!--考勤配置-->
     <Attandance>

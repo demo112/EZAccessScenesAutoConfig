@@ -32,7 +32,7 @@ def do_batch_import_person(filename=None):
             file = person_list[index]
             file_name = PERSONINFO + "\\" + file
             #     导入人员信息
-            flag1 = pm.batchImport(name="批量导入", Depth=12, foundIndex=4)
+            flag1 = pm.batchImport(name="批量导入", Depth=12, foundIndex=5)
             flag2 = pm.batchImportChoose(fileName=file_name, name="人员名单.xls", Depth=17, foundIndex=1, winChooseID="1148")
             flag3 = pm.batch_import_confirm()
             if flag*flag1*flag2*flag3:
@@ -61,7 +61,7 @@ def do_batch_import_photo(filename=None):
         file = photo_list[index]
         file_name = PHOTOCOPYPATH + "\\" + file
         #     导入图片信息
-        pm.batchImport(name="批量导图", Depth=12, foundIndex=7)
+        pm.batchImport(name="批量导图", Depth=12, foundIndex=8)
         pm.batchImportChoose(fileName=file_name, name="人员图片.zip", Depth=17, foundIndex=1, winChooseID="1148")
         pm.batch_import_confirm()
         pm.checkProgress(name="人员图片.zip", Depth=17, foundIndex=1)
