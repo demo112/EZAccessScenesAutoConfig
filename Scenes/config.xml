@@ -1,7 +1,7 @@
 <config>
     <name>XXXXX配置场景</name>
     <!--如果原配置信息不是默认，是否覆盖-->
-    <ifrestore>True</ifrestore>
+    <ifrestore>False</ifrestore>
     <!--完成后是否保存配置资源-->
     <ifSaveSource>False</ifSaveSource>
     <checkLanguage>cn</checkLanguage>
@@ -48,8 +48,8 @@
     <!--授权配置-->
     <Access>
         <name>示例授权组</name>
-        <deviceRange>(0,2)</deviceRange>
-        <personRange>(0,5000)</personRange>
+        <personRange>1,5000</personRange>
+        <deviceRange>1,32</deviceRange>
     </Access>
     <!--考勤配置-->
     <Attandance>

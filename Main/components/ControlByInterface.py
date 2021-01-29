@@ -25,11 +25,18 @@ def do_batch_remove_device(*args):
 
 
 def do_add_access(name, person_set, device_set):
+    """
+
+    :param name: 授权组名称
+    :param person_set: (person_min, person_max)
+    :param device_set: (device_min, devide_max)
+    :return: 无
+    """
     aim = AccessInterfaceManagement()
     name = str(name)
     # person_list = range(person_set[1], person_set[3]+1)
-    person_list = range(int(person_set[1]), int(person_set[3]))
-    device_list = range(int(device_set[1]), int(device_set[3]))
+    person_list = range(person_set[0], person_set[1] + 1)
+    device_list = range(device_set[0], device_set[1] + 1)
     aim.access_add(name, person_list, device_list)
 
 

@@ -26,7 +26,7 @@ class StrToAes:
 class HttpsMethod(object):
     def __init__(self, username=USERINFO["username"], password=USERINFO["password"], port=10008):
         self.server_ip = '127.0.0.1'
-        self.port = 10008
+        self.port = port
         self.username = username
         self.password = password
         # 建立长链接，节约时间及网络带宽
@@ -88,6 +88,7 @@ class HttpsMethod(object):
             res = res.decode("utf-8")
             res = res.replace('false', 'False')
             res = res.replace('true', 'True')
+            print(res)
             res = eval(res)
             # print(res_dict)
             return res["code"]
@@ -124,7 +125,7 @@ class HttpsMethod(object):
                    "Accept-Language": "zh-CN,zh;q=0.9"
                    }
         try:
-            response = self.getResponse(url,  headers, body)
+            response = self.getResponse(url, headers, body)
         except Exception as e:
             self.httpClient.close()
             self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
@@ -191,7 +192,7 @@ class DeviceInterfaceManagement(HttpsMethod):
         deviceData["devicePassword"] = devicePassword
 
         param = json.JSONEncoder().encode(deviceData)
-        headers["Content-Length"] = len(param)
+        headers["Content-Length"] = str(len(param))
         headers["Authorization"] = self.token
 
         response = self.OPENAPI_POST(url, headers, param)
@@ -313,16 +314,15 @@ class AccessInterfaceManagement(HttpsMethod):
             maxNum = int(DEVICEUSERINFO["MaxDeviceNum"])
             # 判断所需列表
             if "device" == tbl_type:
-                index_list = index_list[0:maxNum]
+                # index_list = index_list[0:maxNum]
                 idList = sql.search("dev_id", "ucs", "tbl_ac_device")
             elif "person" == tbl_type:
                 idList = sql.search("person_id", "ucs", "tbl_person")
             else:
                 idList = []
             _needList = []
-
             for i in index_list:
-                _needList.append(int(idList[i][0]))
+                _needList.append(int(idList[i - 1][0]))
             return _needList
 
         url = "https://%s:%d%s" % (self.server_ip, self.port, ACCESS_ADD_URL)
@@ -453,4 +453,5 @@ if __name__ == '__main__':
     # h = HttpsMethod()
     # t = h.getAccessToken()
     # print(t)
+
     pass

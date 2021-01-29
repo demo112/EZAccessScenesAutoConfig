@@ -42,8 +42,8 @@ DEVICEUSERINFO = {
 # 授权配置
 ACCESS_DEFAULT_INFO = {
     "name": main_root.find("Access").find("name").text,
-    "deviceRange": main_root.find("Access").find("deviceRange").text,
-    "personRange": main_root.find("Access").find("personRange").text,
+    "deviceRange": tuple(int(x) for x in main_root.find("Access").find("deviceRange").text.split(",")),
+    "personRange": tuple(int(x) for x in main_root.find("Access").find("personRange").text.split(",")),
 }
 
 

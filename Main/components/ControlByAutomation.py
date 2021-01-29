@@ -33,6 +33,8 @@ def do_batch_import_person(filename=None):
             file_name = PERSONINFO + "\\" + file
             #     导入人员信息
             flag1 = pm.batchImport(name="批量导入", Depth=12, foundIndex=5)
+            # 没有人员划归就是4，有就是5，数批量导入是第几个按钮即可
+            # flag1 = pm.batchImport(name="批量导入", Depth=12, foundIndex=4)
             flag2 = pm.batchImportChoose(fileName=file_name, name="人员名单.xls", Depth=17, foundIndex=1, winChooseID="1148")
             flag3 = pm.batch_import_confirm()
             if flag*flag1*flag2*flag3:
