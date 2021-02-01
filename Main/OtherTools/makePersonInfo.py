@@ -1,12 +1,12 @@
 # coding=utf-8
 
 import random
-import os
 import time
 from zipfile import ZipFile
 
 import xlwt
 
+from Main.OtherTools.xmlFileOperation import XmlFile, XmlSearch, XmlChange
 from Main.__init__ import *
 from Main.OtherTools.__init__ import *
 
@@ -137,9 +137,11 @@ class MakePhoto:
         motherFileSize = round(os.path.getsize(motherFilePath) / 1024, 2) + 0.2  # 单张照片大小
         eachZipNum = int(zipFileSize * 1024 / motherFileSize)  # 单个包大小
         zipFileNum = int(len(fileList) / eachZipNum) + 1
-        print(motherFileSize)
-        print(eachZipNum)
-        print(zipFileNum)
+        # todo xml文件修改方法再独立出来 放到xmlFileOperation中
+        config_tree = xf.read_xml(CONFIGPATH + "\config.xml")
+        person_photo_tree = xs.find_nodes(config_tree, "PersonPicture/eachZipNum")
+        xc.change_node_text(person_photo_tree, str(eachZipNum))
+        xf.write_xml(config_tree, CONFIGPATH + "\config.xml")
 
         for z in range(1, zipFileNum + 1):
             # 拆分列表分别写入
@@ -170,5 +172,6 @@ def makePhotoZip():
 
 
 if __name__ == '__main__':
-    # makePersonList()
+    makePersonList()
     makePhotoZip()
+

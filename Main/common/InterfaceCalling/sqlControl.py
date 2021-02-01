@@ -2,8 +2,10 @@ import time
 
 import pymysql
 
+from Main import SQL
+
 pymysql.install_as_MySQLdb()
-from Main.common.UI_Automation.uiControl import *
+# from Main.common.UI_Automation.uiControl import
 
 
 class SqlIO(object):
@@ -37,6 +39,20 @@ class SqlIO(object):
         data = cursor.fetchall()
         return data
 
+    def count(self, db_wm, db_nm):
+        """
+        :param db_wm:库名
+        :param db_nm:表名
+        :return: 指定表中条数
+        """
+        # 显示有多少条记录
+        db, cursor = self.link(db_wm)
+        query = " select count(*) from {}".format(db_nm)
+        cursor.execute(query)
+        db.commit()
+        count_wm = cursor.fetchall()[0][0]
+        return int(count_wm)
+
     def readPassword(self):
         """
         读取管理员密码密文
@@ -46,6 +62,15 @@ class SqlIO(object):
         return pw
 
     def readInfo(self, targetRow, infoRow, info, db_wm, db_nm):
+        """
+
+        :param targetRow:
+        :param infoRow:
+        :param info:
+        :param db_wm:
+        :param db_nm:
+        :return:
+        """
         db, cursor = self.link(db_wm)
         query = "SELECT {} FROM {} WHERE {} LIKE '{}'".format(targetRow, db_nm, infoRow, info)
         cursor.execute(query)

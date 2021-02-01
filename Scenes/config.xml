@@ -1,15 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
 <config>
     <name>XXXXX配置场景</name>
-    <!--如果原配置信息不是默认，是否覆盖-->
+    
     <ifrestore>False</ifrestore>
-    <!--完成后是否保存配置资源-->
+    
     <ifSaveSource>False</ifSaveSource>
     <checkLanguage>cn</checkLanguage>
     <UserInfo>
         <username>admin</username>
         <password>Smbtest00</password>
     </UserInfo>
-    <!--设备信息-->
+    
     <DeviceInfo>
         <MaxDeviceNum>32</MaxDeviceNum>
         <deviceName>示例设备</deviceName>
@@ -17,7 +18,7 @@
         <LONG>24</LONG>
         <Port>80</Port>
         <deviceUsername>admin</deviceUsername>
-<!--        此处为Smbtest00密文-->
+
         <devicePassword>Dbckl4A3AsqW/e1zslLUSg==</devicePassword>
     </DeviceInfo>
     <DepartmentInfo>
@@ -25,7 +26,7 @@
         <maxNumAllDp>5000</maxNumAllDp>
         <maxNumEachDp>500</maxNumEachDp>
     </DepartmentInfo>
-    <!--人员信息格式模板-->
+    
     <PersonInfo>
         <PersonID>jys%s000000%s</PersonID>
         <Name>jys%s000000%sABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv</Name>
@@ -41,17 +42,18 @@
         <Remark>ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxyz!@#$%^]*()-_</Remark>
         <PhotoNum>6</PhotoNum>
     </PersonInfo>
-    <!--人员照片-->
+    
     <PersonPicture>
         <zipFileSize>500</zipFileSize>
+        <eachZipNum>1017</eachZipNum>
     </PersonPicture>
-    <!--授权配置-->
+    
     <Access>
         <name>示例授权组</name>
-        <deviceRange>(0,2)</deviceRange>
-        <personRange>(0,5000)</personRange>
+        <deviceRange>(0,1)</deviceRange>
+        <personRange>(0,10)</personRange>
     </Access>
-    <!--考勤配置-->
+    
     <Attandance>
         null
     </Attandance>

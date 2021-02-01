@@ -8,12 +8,12 @@ from Main.components.ControlByAutomation import *
 #     do_batch_remove_person()
 #     do_batch_remove_device()
 # #
-do_batch_add_device(DNS=DEVICEUSERINFO["VLAN"], index=DEVICEUSERINFO["LONG"], Num=DEVICEUSERINFO["MaxDeviceNum"])
+# do_batch_add_device(DNS=DEVICEUSERINFO["VLAN"], index=DEVICEUSERINFO["LONG"], Num=DEVICEUSERINFO["MaxDeviceNum"])
 # print("即将进行人员信息配置，请切换至EZAccess客户端。导入前请不要操作鼠标")
 # time.sleep(3)
 # do_batch_import_person()
-# do_batch_import_photo()
-# do_add_access(ACCESS_DEFAULT_INFO["name"], ACCESS_DEFAULT_INFO["deviceRange"], ACCESS_DEFAULT_INFO["personRange"])
+do_batch_import_photo()
+# do_add_access(ACCESS_DEFAULT_INFO["name"], ACCESS_DEFAULT_INFO["personRange"], ACCESS_DEFAULT_INFO["deviceRange"])
 # 判断是否备份当前配置
 
 # 挑选配置文件

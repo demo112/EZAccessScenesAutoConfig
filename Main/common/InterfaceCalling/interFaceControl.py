@@ -66,8 +66,7 @@ class HttpMethod(object):
 
             TOKEN_HEADERS["Content-Length"] = len(param)
             headers = TOKEN_HEADERS
-            # self.httpClient.request('POST', url, body=param, headers=headers)
-            requests.post(url, data=param, headers=headers, verify=False)
+            self.httpClient.request('POST', url, body=param, headers=headers)
         except IndexError:
             print("未注册用户，请注册")
         try:
