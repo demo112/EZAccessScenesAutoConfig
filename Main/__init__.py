@@ -2,6 +2,13 @@
 import os
 from xml.etree import ElementTree  as  ET
 
+from Main.OtherTools.xmlFileOperation import XmlFile, XmlSearch, XmlChange
+
+xf = XmlFile()
+xs = XmlSearch()
+xc = XmlChange()
+
+
 # 路径配置
 HOMEPATH = os.path.abspath(os.path.join(os.path.abspath(__file__), "..\\.."))
 # 场景配置路径

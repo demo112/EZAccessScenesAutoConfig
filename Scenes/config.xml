@@ -44,6 +44,7 @@
     <!--人员照片-->
     <PersonPicture>
         <zipFileSize>500</zipFileSize>
+        <eachZipNum>1017</eachZipNum>
     </PersonPicture>
     <!--授权配置-->
     <Access>

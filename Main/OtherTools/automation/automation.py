@@ -11,7 +11,7 @@ def usage():
 <Color=Cyan>-h</Color>      show command <Color=Cyan>help</Color>
 <Color=Cyan>-t</Color>      delay <Color=Cyan>time</Color>, default 3 seconds, begin to enumerate after Value seconds, this must be an integer
         you can delay a few seconds and make a window active so automation can enumerate the active window
-<Color=Cyan>-d</Color>      enumerate tree <Color=Cyan>depth</Color>, this must be an integer, if it is null, enumerate the whole tree
+<Color=Cyan>-d</Color>      enumerate root_tree <Color=Cyan>depth</Color>, this must be an integer, if it is null, enumerate the whole root_tree
 <Color=Cyan>-r</Color>      enumerate from <Color=Cyan>configRoot</Color>:Desktop window, if it is null, enumerate from foreground window
 <Color=Cyan>-f</Color>      enumerate from <Color=Cyan>focused</Color> control, if it is null, enumerate from foreground window
 <Color=Cyan>-c</Color>      enumerate the control under <Color=Cyan>cursor</Color>, if depth is < 0, enumerate from its ancestor up to depth
