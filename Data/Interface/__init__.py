@@ -75,6 +75,39 @@ DEVICE_REMOVE_PARAM = {
     "deviceIdList": [],
 }
 
+VISITOR_ADD_URL = "/openapi/visitor/add"
+VISITOR_ADD_HEADERS = COMMON_HEADERS
+# VISITOR_ADD_PARAM = {
+#     "visitorName": "1",
+#     "visitorSex": 1,
+#     "telephone": "",
+#     "visitorNumber": 100,
+#     "visitorDepartment": "",
+#     "receptionistId": "",
+#     "identificationList": [{"type": "0", "number": "oAbUd4Qsf3Dv7EurfvURbP2itlrU1iHF0Tyrzili03w="}, {"type": "1", "number": ""}],
+#     "imageList": [],
+#     "remarks": "",
+#     "startTime": "1609120996",
+#     "endTime": "1609171199",
+#     "deviceSerialList": "146370393798606848"
+# }
+VISITOR_ADD_PARAM = {
+    "deviceSerialList": ["148752369776066560", "148752395545870336"],
+    "endTime": 1612627199,
+    "identificationList": [{"type": 0, "number": "hpwX0T05sgPkykJohPRt0A=="}, {"type": 1, "number": "1"}],
+    "imageList": [],
+    # "imageList": [{"pictureName": "12", "pictureSize": 202400, "pictureBase64Code": "hpwX0T05sgPkykJohPRt0A=="}],
+    "receptionistDepartment": "dept",
+    "receptionistId": 1,
+    "remarks": "1",
+    "startTime": 1612597181,
+    "telephone": "hpwX0T05sgPkykJohPRt0A==",
+    "visitorDepartment": "1",
+    "visitorName": "1",
+    "visitorNumber": "1",
+    "visitorSex": 1
+    }
+
 ACCESS_ADD_URL = "/openapi/acs/permission/group/add"
 ACCESS_ADD_HEADERS = COMMON_HEADERS
 ACCESS_ADD_PARAM = {
@@ -107,16 +140,16 @@ REGULATION_UPDATE_PARAM = {
 LEAVE_ADD_URL = "/openapi/atnd/attendance/leave/add"
 LEAVE_ADD_HEADERS = COMMON_HEADERS
 LEAVE_ADD_PARAM = {
-    "duration":900,
-    "endTime":"2020/12/12 18:00",
-    "personName":"jys0030000000001ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv",
-    "primitive":"0",
-    "remark":"",
-    "startTime":"2020/12/12 09:00",
-    "subtype":"0",
-    "departName":".........1",
-    "personCode":"jys0030000000001",
-    "personId":1
+    "duration": 900,
+    "endTime": "2020/12/12 18:00",
+    "personName": "jys0030000000001ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv",
+    "primitive": "0",
+    "remark": "",
+    "startTime": "2020/12/12 09:00",
+    "subtype": "0",
+    "departName": ".........1",
+    "personCode": "jys0030000000001",
+    "personId": 1
 }
 
 if __name__ == '__main__':

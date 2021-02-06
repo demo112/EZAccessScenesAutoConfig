@@ -63,7 +63,6 @@ class SqlIO(object):
 
     def readInfo(self, targetRow, infoRow, info, db_wm, db_nm):
         """
-
         :param targetRow:
         :param infoRow:
         :param info:

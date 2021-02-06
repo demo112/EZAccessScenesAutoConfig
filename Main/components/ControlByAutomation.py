@@ -54,7 +54,7 @@ def do_batch_import_photo(filename=None):
     :param filename: 导入照片压缩包名称
     :return:
     """
-
+    # todo 继续调试核验程序
     def checkProgress(flag=None):
         sio = SqlIO()
         timeout = 10

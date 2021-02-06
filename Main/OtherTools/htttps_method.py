@@ -4,9 +4,10 @@ import json
 import requests
 import urllib3
 
+null = ""
 # 用户名密码，密码要求是md5加密后密文
-USERNAME = ""
-USEPASSWORD = ""
+USERNAME = "admin"
+USEPASSWORD = "Dbckl4A3AsqW/e1zslLUSg=="
 
 TOKEN_URL = "/openapi/user/account/token/get"
 TOKEN_HEADERS = {
@@ -27,8 +28,8 @@ TOKEN_HEADERS = {
     "host": "127.0.0.1:10008",
 }
 TOKEN_PARAM = {
-    "loginName": "",
-    "password": "",
+    "loginName": "admin",
+    "password": "Dbckl4A3AsqW/e1zslLUSg==",
 }
 
 
@@ -84,6 +85,7 @@ class HttpsMethod(object):
         :return:响应的内容
         """
         response = requests.post(url, headers=headers, data=data, verify=False).content
+        print(response)
         return response
 
     def getStatusCode(self, res):
@@ -150,3 +152,8 @@ class HttpsMethod(object):
             # self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
             # raise http.client.BadStatusLine('Badstatusline')
         return response
+
+if __name__ == '__main__':
+    h = HttpsMethod()
+    t = h.getAccessToken()
+    print(t)

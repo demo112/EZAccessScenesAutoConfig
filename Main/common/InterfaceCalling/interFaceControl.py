@@ -1,9 +1,10 @@
 import json
-import time
 import hashlib
-import http.client
 
 # 解决python中无法处理null问题，将返回值中的null强制转化为空字符，''
+import random
+import time
+
 import requests
 import urllib3
 
@@ -13,7 +14,6 @@ from IPy import IP
 from Main.OtherTools.Log.CreateLog import CreateLog
 
 global null
-null = ''
 sql = SqlIO()
 log = CreateLog().get_logger()
 
@@ -30,7 +30,7 @@ class HttpsMethod(object):
         self.username = username
         self.password = password
         # 建立长链接，节约时间及网络带宽
-        self.httpClient = http.client.HTTPConnection(self.server_ip, port, timeout=60)
+        # self.httpClient = http.client.HTTPConnection(self.server_ip, port, timeout=60)
         # 获取鉴权token值
         self.token = self.getAccessToken()
 
@@ -56,8 +56,8 @@ class HttpsMethod(object):
                 accessToken = resdata["accessToken"]
         except Exception as e:
             print("gettoken:", e)
-            self.httpClient.close()
-            self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=60)  # 重新建立链接
+            # self.httpClient.close()
+            # self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=60)  # 重新建立链接
             # raise http.client.HTTPConnection.BadStatusLine('Badstatusline')
         return accessToken
 
@@ -88,10 +88,8 @@ class HttpsMethod(object):
             res = res.decode("utf-8")
             res = res.replace('false', 'False')
             res = res.replace('true', 'True')
-            print(res)
-            res = eval(res)
-            # print(res_dict)
-            return res["code"]
+            res_dic = eval(res)
+            return res_dic["code"]
         except NameError as e:
             print("getStatusCode:", e)
             return 1
@@ -101,11 +99,11 @@ class HttpsMethod(object):
         获取Response中的Data
         """
         try:
-            res = res.decode()
+            res = res.decode("utf-8")
             res = res.replace('false', 'False')
             res = res.replace('true', 'True')
-            res = eval(res)
-            data = res["data"]
+            res_dic = eval(res)
+            data = res_dic["data"]
             return data
         except Exception as e:
             print("getResData:", e)
@@ -127,8 +125,9 @@ class HttpsMethod(object):
         try:
             response = self.getResponse(url, headers, body)
         except Exception as e:
-            self.httpClient.close()
-            self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
+            pass
+            # self.httpClient.close()
+            # self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
             # raise http.client.BadStatusLine('Badstatusline')
         return response
 
@@ -137,8 +136,9 @@ class HttpsMethod(object):
         try:
             response = self.getResponse(url, headers, param)
         except Exception as e:
-            self.httpClient.close()
-            self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
+            pass
+            # self.httpClient.close()
+            # self.httpClient = http.client.HTTPConnection(self.server_ip, 80, timeout=30)  # 重新建立链接
             # raise http.client.BadStatusLine('Badstatusline')
         return response
 
@@ -294,6 +294,79 @@ class DeviceInterfaceManagement(HttpsMethod):
         return response
 
 
+class VisitorInterfaceManagement(HttpsMethod):
+    # def visitor_add(self, name, sex, visitor_number, id_aes, ic, telephone_aes, visitor_dp, remark,
+    #                 employee_id, employee_dp, device_list,
+    #                 startTime, endTime):
+    def visitor_add(self):
+        url = "https://%s:%d%s" % (self.server_ip, self.port, VISITOR_ADD_URL)
+        headers = DEVICE_ADD_HEADERS
+        visitor_data = VISITOR_ADD_PARAM
+        # visitor_data["visitorName"] = name
+        # visitor_data["visitorNumber"] = visitor_number
+        # visitor_data["visitorSex"] = sex or random.randrange(0, 2, 1)
+        # visitor_data["visitorDepartment"] = visitor_dp
+        # visitor_data["receptionistId"] = employee_id
+        # visitor_data["receptionistDepartment"] = employee_dp
+        # visitor_data["telephone"] = telephone_aes
+        # visitor_data["identificationList"] = [{"type": 0, "number": id_aes}, {"type": 1, "number": ic}]
+        # visitor_data["remarks"] = remark
+        # visitor_data["imageList"] = ""
+        #
+        # visitor_data["deviceSerialList"] = device_list
+        # visitor_data["startTime"] = startTime
+        # visitor_data["endTime"] = endTime
+
+        param = json.JSONEncoder().encode(visitor_data)
+        headers["Content-Length"] = str(len(param))
+        headers["Authorization"] = self.token
+        response = self.OPENAPI_POST(url, headers, param)
+        print(param)
+        print(response)
+        return response
+        pass
+
+    def visitor_batch_add(self):
+        tbl_person = sql.search("*", "ucs", "tbl_person")
+        for person in tbl_person[1:2]:
+            print(person)
+            visitor_number = person[0] + 5000
+            name = "visitor" + person[2][3:64]
+            sex = person[3]
+            id_aes = person[5]
+            ic = person[10]
+            telephone_aes = person[7]
+            visitor_dp = "visitor" + str(person[8])
+            remark = person[12]
+            employee_id = person[0]
+            employee_dp = sql.readInfo("dept_name", "dept_id", int(person[8]), "ucs", "tbl_dept")
+
+            device_list = [str(random.choice(sql.search("dev_id", "ucs", "tbl_ac_device"))[0])]
+            start_time = int(time.time())
+            end_time = start_time + 10800
+            print("=========================================================================")
+            # print("name:", name)
+            # print("sex:", sex)
+            # print("visitor_number:", visitor_number)
+            # print("id_aes:", id_aes)
+            # print("ic:", ic)
+            # print("telephone_aes:", telephone_aes)
+            # print("visitor_dp:", visitor_dp)
+            # print("remark:", remark)
+            # print("employee_id:", employee_id)
+            # print("employee_dp:", employee_dp)
+            # print("device_list:", device_list)
+            self.visitor_add(name, sex, visitor_number, id_aes, ic, telephone_aes, visitor_dp, remark,
+                             employee_id, employee_dp, device_list,
+                             start_time, end_time)
+
+    def visitor_change(self):
+        pass
+
+    def visitor_delete(self):
+        pass
+
+
 class AccessInterfaceManagement(HttpsMethod):
     def access_add(self, name, person_list, device_list):
         """
@@ -329,7 +402,7 @@ class AccessInterfaceManagement(HttpsMethod):
         headers = ACCESS_ADD_HEADERS
         accessData = ACCESS_ADD_PARAM
         accessData["permissionGroupName"] = name
-
+        print(accessData)
         accessData["personIdList"] = index_to_id("person", person_list)
         accessData["deviceIdList"] = index_to_id("device", device_list)
         body = json.JSONEncoder().encode(accessData)
@@ -450,8 +523,8 @@ if __name__ == '__main__':
     # aim = AccessInterfaceManagement()
     # a_l = aim.accessSearch()
     # print(a_l)
-    # h = HttpsMethod()
-    # t = h.getAccessToken()
-    # print(t)
+    h = HttpsMethod()
+    t = h.getAccessToken()
+    print(t)
 
     pass
