@@ -295,27 +295,26 @@ class DeviceInterfaceManagement(HttpsMethod):
 
 
 class VisitorInterfaceManagement(HttpsMethod):
-    # def visitor_add(self, name, sex, visitor_number, id_aes, ic, telephone_aes, visitor_dp, remark,
-    #                 employee_id, employee_dp, device_list,
-    #                 startTime, endTime):
-    def visitor_add(self):
+    def visitor_add(self, name, sex, visitor_number, id_aes, ic, telephone_aes, visitor_dp, remark,
+                    employee_id, employee_dp, device_list,
+                    startTime, endTime):
         url = "https://%s:%d%s" % (self.server_ip, self.port, VISITOR_ADD_URL)
         headers = DEVICE_ADD_HEADERS
         visitor_data = VISITOR_ADD_PARAM
-        # visitor_data["visitorName"] = name
-        # visitor_data["visitorNumber"] = visitor_number
-        # visitor_data["visitorSex"] = sex or random.randrange(0, 2, 1)
-        # visitor_data["visitorDepartment"] = visitor_dp
-        # visitor_data["receptionistId"] = employee_id
-        # visitor_data["receptionistDepartment"] = employee_dp
-        # visitor_data["telephone"] = telephone_aes
-        # visitor_data["identificationList"] = [{"type": 0, "number": id_aes}, {"type": 1, "number": ic}]
-        # visitor_data["remarks"] = remark
-        # visitor_data["imageList"] = ""
-        #
-        # visitor_data["deviceSerialList"] = device_list
-        # visitor_data["startTime"] = startTime
-        # visitor_data["endTime"] = endTime
+        visitor_data["visitorName"] = name
+        visitor_data["visitorNumber"] = visitor_number
+        visitor_data["visitorSex"] = sex or random.randrange(0, 2, 1)
+        visitor_data["visitorDepartment"] = visitor_dp
+        visitor_data["receptionistId"] = employee_id
+        visitor_data["receptionistDepartment"] = employee_dp
+        visitor_data["telephone"] = telephone_aes
+        visitor_data["identificationList"] = [{"type": 0, "number": id_aes}, {"type": 1, "number": ic}]
+        visitor_data["remarks"] = remark
+        visitor_data["imageList"] = []
+
+        visitor_data["deviceSerialList"] = device_list
+        visitor_data["startTime"] = startTime
+        visitor_data["endTime"] = endTime
 
         param = json.JSONEncoder().encode(visitor_data)
         headers["Content-Length"] = str(len(param))
@@ -328,10 +327,10 @@ class VisitorInterfaceManagement(HttpsMethod):
 
     def visitor_batch_add(self):
         tbl_person = sql.search("*", "ucs", "tbl_person")
-        for person in tbl_person[1:2]:
+        for person in tbl_person[1:10000]:
             print(person)
             visitor_number = person[0] + 5000
-            name = "visitor" + person[2][3:64]
+            name = "visitor" + person[2][3:60]
             sex = person[3]
             id_aes = person[5]
             ic = person[10]
@@ -339,7 +338,7 @@ class VisitorInterfaceManagement(HttpsMethod):
             visitor_dp = "visitor" + str(person[8])
             remark = person[12]
             employee_id = person[0]
-            employee_dp = sql.readInfo("dept_name", "dept_id", int(person[8]), "ucs", "tbl_dept")
+            employee_dp = sql.readInfo("dept_name", "dept_id", int(person[8]), "ucs", "tbl_dept")[0][0]
 
             device_list = [str(random.choice(sql.search("dev_id", "ucs", "tbl_ac_device"))[0])]
             start_time = int(time.time())

@@ -25,8 +25,8 @@ def do_batch_remove_device(*args):
 
 def do_batch_add_visitor():
     vim = VisitorInterfaceManagement()
-    vim.visitor_add()
-    # vim.visitor_batch_add()
+    # vim.visitor_add()
+    vim.visitor_batch_add()
 
 def do_add_access(name, person_set, device_set):
     """
