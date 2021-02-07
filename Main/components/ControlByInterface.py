@@ -23,10 +23,10 @@ def do_batch_remove_device(*args):
             msg = "设备【{}】因:'{}'无法删除".format(device["deviceId"], device["resultMessage"])
             log.warning(msg)
 
-def do_batch_add_visitor():
+def do_batch_add_visitor(visitor_num):
     vim = VisitorInterfaceManagement()
     # vim.visitor_add()
-    vim.visitor_batch_add()
+    vim.visitor_batch_add(visitor_num)
 
 def do_add_access(name, person_set, device_set):
     """
@@ -62,5 +62,5 @@ def do_batch_remove_access(name=None):
 
 
 if __name__ == '__main__':
-    do_batch_add_visitor()
+    do_batch_add_visitor(5000)
     # print(int(time.time()))

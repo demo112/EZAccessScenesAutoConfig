@@ -325,9 +325,18 @@ class VisitorInterfaceManagement(HttpsMethod):
         return response
         pass
 
-    def visitor_batch_add(self):
+    def visitor_batch_add(self, visitor_num):
         tbl_person = sql.search("*", "ucs", "tbl_person")
-        for person in tbl_person[1:10000]:
+
+        for person_index in range(1, visitor_num):
+            # todo 处理一下编号，实现无限量插入
+            if person_index < 5001:
+                pass
+            elif person_index > 5000:
+                pass
+            else:
+                pass
+            person = tbl_person[person_index]
             print(person)
             visitor_number = person[0] + 5000
             name = "visitor" + person[2][3:60]
@@ -343,18 +352,6 @@ class VisitorInterfaceManagement(HttpsMethod):
             device_list = [str(random.choice(sql.search("dev_id", "ucs", "tbl_ac_device"))[0])]
             start_time = int(time.time())
             end_time = start_time + 10800
-            print("=========================================================================")
-            # print("name:", name)
-            # print("sex:", sex)
-            # print("visitor_number:", visitor_number)
-            # print("id_aes:", id_aes)
-            # print("ic:", ic)
-            # print("telephone_aes:", telephone_aes)
-            # print("visitor_dp:", visitor_dp)
-            # print("remark:", remark)
-            # print("employee_id:", employee_id)
-            # print("employee_dp:", employee_dp)
-            # print("device_list:", device_list)
             self.visitor_add(name, sex, visitor_number, id_aes, ic, telephone_aes, visitor_dp, remark,
                              employee_id, employee_dp, device_list,
                              start_time, end_time)
